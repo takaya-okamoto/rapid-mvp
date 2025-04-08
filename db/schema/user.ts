@@ -5,8 +5,14 @@ export const user = pgTable("user", {
 	// ユーザーのID (ClerkのuserIdと同じ)
 	id: varchar("id").primaryKey(),
 
-	// ユーザーの名前
-	name: varchar("name", { length: 255 }).notNull(),
+	// first name
+	firstName: varchar("first_name", { length: 255 }).notNull(),
+
+	// last name
+	lastName: varchar("last_name", { length: 255 }).notNull(),
+
+	// ユーザーのプロフィール画像
+	profileImage: varchar("profile_image", { length: 255 }).notNull(),
 
 	// ユーザーのメールアドレス
 	email: varchar("email", { length: 255 }).notNull(),

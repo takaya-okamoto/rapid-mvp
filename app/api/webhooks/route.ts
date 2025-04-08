@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { Webhook } from "svix";
 
 export async function POST(req: Request) {
+	console.log("Webhook received");
 	const SIGNING_SECRET = process.env.SIGNING_SECRET;
 
 	if (!SIGNING_SECRET) {
@@ -16,6 +17,8 @@ export async function POST(req: Request) {
 
 	// Create new Svix instance with secret
 	const wh = new Webhook(SIGNING_SECRET);
+
+	console.log("authenticated");
 
 	// Get headers
 	const headerPayload = req.headers;
@@ -31,6 +34,8 @@ export async function POST(req: Request) {
 			status: 400,
 		});
 	}
+
+	console.log("headers verified");
 
 	// Get body
 	const payload = await req.json();
@@ -52,6 +57,8 @@ export async function POST(req: Request) {
 		});
 	}
 
+	console.log("payload verified");
+
 	if (evt.type === "user.created") {
 		try {
 			console.log("userId:", evt.data.id);
@@ -59,7 +66,9 @@ export async function POST(req: Request) {
 			const newUser: NewUser = {
 				id: evt.data.id,
 				email: evt.data.email_addresses[0].email_address,
-				name: `${evt.data.first_name} ${evt.data.last_name}`,
+				firstName: evt.data.first_name ?? "",
+				lastName: evt.data.last_name ?? "",
+				profileImage: evt.data.image_url ?? "",
 			};
 
 			const userResult = await db.insert(user).values(newUser).returning();
@@ -74,7 +83,9 @@ export async function POST(req: Request) {
 			const updatedUser: NewUser = {
 				id: evt.data.id,
 				email: evt.data.email_addresses[0].email_address,
-				name: `${evt.data.first_name} ${evt.data.last_name}`,
+				firstName: evt.data.first_name ?? "",
+				lastName: evt.data.last_name ?? "",
+				profileImage: evt.data.image_url ?? "",
 			};
 
 			await db.update(user).set(updatedUser).where(eq(user.id, evt.data.id));
@@ -90,6 +101,8 @@ export async function POST(req: Request) {
 			console.error("Error: Could not delete user:", error);
 		}
 	}
+
+	console.log("Webhook processed");
 
 	return new Response("Webhook received", { status: 200 });
 }
