@@ -1,1 +1,1 @@
-# rapid-mvp
+# rapidMVP

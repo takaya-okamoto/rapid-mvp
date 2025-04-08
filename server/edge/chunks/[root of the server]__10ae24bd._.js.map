@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 23, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/middleware.ts"],"sourcesContent":["import { clerkMiddleware } from \"@clerk/nextjs/server\";\nimport { createRouteMatcher } from \"@clerk/nextjs/server\";\n\nconst isPublicRoute = createRouteMatcher([\"/api/webhooks(.*)\"]);\nconst isProtectedRoute = createRouteMatcher([\"/dashboard(.*)\"]);\n\nexport default clerkMiddleware(async (auth, req) => {\n\tif (!isPublicRoute(req) && isProtectedRoute(req)) {\n\t\tawait auth.protect();\n\t}\n});\n\nexport const config = {\n\tmatcher: [\n\t\t// Skip Next.js internals and all static files, unless found in search params\n\t\t\"/((?!_next|[^?]*\\\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)\",\n\t\t// Always run for API routes\n\t\t\"/(api|trpc)(.*)\",\n\t],\n};\n"],"names":[],"mappings":";;;;AAAA;AACA;;;AAEA,MAAM,gBAAgB,CAAA,GAAA,kLAAA,CAAA,qBAAkB,AAAD,EAAE;IAAC;CAAoB;AAC9D,MAAM,mBAAmB,CAAA,GAAA,kLAAA,CAAA,qBAAkB,AAAD,EAAE;IAAC;CAAiB;uCAE/C,CAAA,GAAA,qLAAA,CAAA,kBAAe,AAAD,EAAE,OAAO,MAAM;IAC3C,IAAI,CAAC,cAAc,QAAQ,iBAAiB,MAAM;QACjD,MAAM,KAAK,OAAO;IACnB;AACD;AAEO,MAAM,SAAS;IACrB,SAAS;QACR,6EAA6E;QAC7E;QACA,4BAA4B;QAC5B;KACA;AACF"}}]
+}

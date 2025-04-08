@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 25, "column": 0}, "map": {"version":3,"sources":["file:///Users/takayaokamoto/dev/my-project/rapidMVP/app/%5BworkspaceId%5D/%5BprojectId%5D/page.tsx"],"sourcesContent":["export default function ProjectPage() {\n\treturn <div>ProjectPage</div>;\n}\n"],"names":[],"mappings":";;;;;AAAe,SAAS;IACvB,qBAAO,8OAAC;kBAAI;;;;;;AACb","debugId":null}}]
+}
