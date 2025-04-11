@@ -1,28 +1,31 @@
-"use client";
-
 import {
 	Breadcrumb,
 	BreadcrumbItem,
 	BreadcrumbLink,
 	BreadcrumbList,
 } from "@/components/ui/breadcrumb";
-import { Slash } from "lucide-react";
+import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { ProjectSwitcher } from "./project-switcher";
-import { WorkspaceSwitcher } from "./workspace-switcher";
+import { Suspense } from "react";
+import {
+	DashboardBreadcrumbSwitcherContainer,
+	DashboardBreadcrumbSwitcherContainerSkeleton,
+	preloadDashboardBreadcrumbData,
+} from "./dashboard-breadcrumb-switcher-container";
 
 type DashboardBreadcrumbProps = {
 	workspaceId: string;
 	projectId: string | undefined;
 };
 
-export function DashboardBreadcrumb({
+export async function DashboardBreadcrumb({
 	workspaceId,
 	projectId,
 }: DashboardBreadcrumbProps) {
-	const pathname = usePathname();
-	const isProjectDetailPage = /^\/dashboard\/projects\/[^\/]+$/.test(pathname);
+	const user = await currentUser();
+	if (user) {
+		preloadDashboardBreadcrumbData(user.id);
+	}
 
 	return (
 		<Breadcrumb>
@@ -33,22 +36,12 @@ export function DashboardBreadcrumb({
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 
-				<Slash size={14} />
-				<BreadcrumbItem>
-					<WorkspaceSwitcher workspaceId={workspaceId} />
-				</BreadcrumbItem>
-
-				{isProjectDetailPage && (
-					<>
-						<Slash size={14} />
-						<BreadcrumbItem>
-							<ProjectSwitcher
-								workspaceId={workspaceId}
-								projectId={projectId}
-							/>
-						</BreadcrumbItem>
-					</>
-				)}
+				<Suspense fallback={<DashboardBreadcrumbSwitcherContainerSkeleton />}>
+					<DashboardBreadcrumbSwitcherContainer
+						workspaceId={workspaceId}
+						projectId={projectId}
+					/>
+				</Suspense>
 			</BreadcrumbList>
 		</Breadcrumb>
 	);

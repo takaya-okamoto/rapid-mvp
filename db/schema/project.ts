@@ -81,3 +81,6 @@ export const project = pgTable(
 		}),
 	],
 );
+
+export type Project = typeof project.$inferSelect;
+export type NewProject = typeof project.$inferInsert;

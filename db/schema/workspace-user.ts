@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
 	index,
 	integer,
@@ -37,3 +38,16 @@ export const workspaceUser = pgTable(
 		primaryKey({ columns: [table.userId, table.workspaceId] }),
 	],
 );
+
+export const workspaceUserRelations = relations(workspaceUser, ({ one }) => ({
+	workspace: one(workspace, {
+		fields: [workspaceUser.workspaceId],
+		references: [workspace.id],
+	}),
+	user: one(user, {
+		fields: [workspaceUser.userId],
+		references: [user.id],
+	}),
+}));
+
+export type NewWorkspaceUser = typeof workspaceUser.$inferInsert;

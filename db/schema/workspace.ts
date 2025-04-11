@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
 	pgPolicy,
 	pgTable,
@@ -7,6 +7,7 @@ import {
 	timestamp,
 	varchar,
 } from "drizzle-orm/pg-core";
+import { workspaceUser } from "./workspace-user";
 
 // workspaces テーブルの定義
 export const workspace = pgTable(
@@ -62,3 +63,10 @@ export const workspace = pgTable(
 		}),
 	],
 );
+
+export const workspaceRelations = relations(workspace, ({ many }) => ({
+	workspaceUsers: many(workspaceUser),
+}));
+
+export type NewWorkspace = typeof workspace.$inferInsert;
+export type Workspace = typeof workspace.$inferSelect;

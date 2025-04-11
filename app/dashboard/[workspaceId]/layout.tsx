@@ -18,7 +18,6 @@ export default async function DashboardLayout({
 	params: Promise<{ workspaceId: string; projectId: string | undefined }>;
 }) {
 	const { workspaceId, projectId } = await params;
-	console.log(workspaceId, projectId);
 	return (
 		<div className="flex flex-col h-screen">
 			<header className="flex h-14 z-70 shrink-0 items-center gap-2 px-6">

@@ -1,6 +1,10 @@
 import { db } from "@/db";
 import type { NewUser } from "@/db/schema/user";
 import { user } from "@/db/schema/user";
+import type { NewWorkspace } from "@/db/schema/workspace";
+import { workspace } from "@/db/schema/workspace";
+import type { NewWorkspaceUser } from "@/db/schema/workspace-user";
+import { workspaceUser } from "@/db/schema/workspace-user";
 import type { WebhookEvent } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { Webhook } from "svix";
@@ -73,6 +77,28 @@ export async function POST(req: Request) {
 
 			const userResult = await db.insert(user).values(newUser).returning();
 			console.log("userResult", userResult);
+
+			const newWorkspace: NewWorkspace = {
+				name: `${evt.data.first_name ?? ""}'s Workspace`,
+			};
+
+			const workspaceResult = await db
+				.insert(workspace)
+				.values(newWorkspace)
+				.returning();
+			console.log("workspaceResult", workspaceResult);
+
+			const newWorkspaceUser: NewWorkspaceUser = {
+				userId: evt.data.id,
+				workspaceId: workspaceResult[0].id,
+				role: "ADMIN",
+			};
+
+			const workspaceUserResult = await db
+				.insert(workspaceUser)
+				.values(newWorkspaceUser)
+				.returning();
+			console.log("workspaceUserResult", workspaceUserResult);
 		} catch (error) {
 			console.error("Error: Could not create user:", error);
 		}

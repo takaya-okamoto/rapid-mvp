@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronsUpDown, Plus } from "lucide-react";
-import * as React from "react";
 
 import {
 	DropdownMenu,
@@ -9,38 +8,26 @@ import {
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
-	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { Workspace } from "@/db/schema/workspace";
 import Link from "next/link";
+import { memo, useState } from "react";
 import { Button } from "../ui/button";
-
-const data = {
-	workspaces: [
-		{
-			id: "1",
-			name: "Default Workspace",
-		},
-		{
-			id: "2",
-			name: "Workspace 2",
-		},
-		{
-			id: "3",
-			name: "Workspace 3",
-		},
-	],
-};
 
 type WorkspaceSwitcherProps = {
 	workspaceId: string;
+	workspaces: Workspace[];
 };
 
-export function WorkspaceSwitcher({ workspaceId }: WorkspaceSwitcherProps) {
-	const [activeWorkspace, setActiveWorkspace] = React.useState(
+function WorkspaceSwitcherComponent({
+	workspaceId,
+	workspaces,
+}: WorkspaceSwitcherProps) {
+	const [activeWorkspace, setActiveWorkspace] = useState(
 		workspaceId
-			? data.workspaces.find((w) => w.id === workspaceId)
-			: data.workspaces[0],
+			? workspaces.find((w) => w.id === Number(workspaceId))
+			: workspaces[0],
 	);
 
 	if (!activeWorkspace) {
@@ -50,7 +37,7 @@ export function WorkspaceSwitcher({ workspaceId }: WorkspaceSwitcherProps) {
 	return (
 		<DropdownMenu>
 			<Link
-				href={`/${workspaceId}`}
+				href={`/dashboard/${workspaceId}`}
 				className="grid flex-1 text-left text-sm leading-tight cursor-pointer"
 			>
 				<span className="truncate font-semibold">{activeWorkspace.name}</span>
@@ -69,16 +56,13 @@ export function WorkspaceSwitcher({ workspaceId }: WorkspaceSwitcherProps) {
 				<DropdownMenuLabel className="text-xs text-muted-foreground">
 					Workspaces
 				</DropdownMenuLabel>
-				{data.workspaces.map((workspace, index) => (
+				{workspaces.map((workspace) => (
 					<DropdownMenuItem
 						key={workspace.name}
 						onClick={() => setActiveWorkspace(workspace)}
 						className="gap-2 p-2"
 					>
-						<Link href={`/${workspace.id}`}>
-							{workspace.name}
-							<DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-						</Link>
+						<Link href={`/dashboard/${workspace.id}`}>{workspace.name}</Link>
 					</DropdownMenuItem>
 				))}
 				<DropdownMenuSeparator />
@@ -92,3 +76,6 @@ export function WorkspaceSwitcher({ workspaceId }: WorkspaceSwitcherProps) {
 		</DropdownMenu>
 	);
 }
+
+// Memoize the component to prevent unnecessary rerenders
+export const WorkspaceSwitcher = memo(WorkspaceSwitcherComponent);

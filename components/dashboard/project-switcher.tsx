@@ -1,7 +1,8 @@
 "use client";
 
 import { ChevronsUpDown, Plus } from "lucide-react";
-import * as React from "react";
+import { useRouter } from "next/navigation";
+import { memo, useEffect, useState } from "react";
 
 import {
 	DropdownMenu,
@@ -9,45 +10,35 @@ import {
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
-	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { Project } from "@/db/schema/project";
 import Link from "next/link";
 import { Button } from "../ui/button";
-
-const data = {
-	projects: [
-		{
-			id: "1",
-			name: "Acme Inc",
-		},
-		{
-			id: "2",
-			name: "Acme Corp.",
-		},
-		{
-			id: "3",
-			name: "Evil Corp.",
-		},
-	],
-};
 
 type ProjectSwitcherProps = {
 	workspaceId: string;
 	projectId: string | undefined;
+	projects: Project[];
 };
 
-export function ProjectSwitcher({
+function ProjectSwitcherComponent({
 	workspaceId,
 	projectId,
+	projects,
 }: ProjectSwitcherProps) {
-	const [activeProject, setActiveProject] = React.useState(
-		projectId
-			? data.projects.find((p) => p.id === projectId)
-			: data.projects[0],
+	const router = useRouter();
+	const [activeProject, setActiveProject] = useState(
+		projectId ? projects.find((p) => p.id === Number(projectId)) : projects[0],
 	);
 
-	if (!activeProject || !workspaceId) {
+	useEffect(() => {
+		if (!activeProject || projects.length === 0) {
+			router.push(`/dashboard/${workspaceId}`);
+		}
+	}, [activeProject, projects, workspaceId, router]);
+
+	if (!activeProject || projects.length === 0) {
 		return null;
 	}
 
@@ -73,16 +64,13 @@ export function ProjectSwitcher({
 				<DropdownMenuLabel className="text-xs text-muted-foreground">
 					Projects
 				</DropdownMenuLabel>
-				{data.projects.map((project, index) => (
+				{projects.map((project, index) => (
 					<DropdownMenuItem
 						key={project.name}
 						onClick={() => setActiveProject(project)}
 						className="gap-2 p-2"
 					>
-						<Link href={`/${workspaceId}/${project.id}`}>
-							{project.name}
-							<DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-						</Link>
+						<Link href={`/${workspaceId}/${project.id}`}>{project.name}</Link>
 					</DropdownMenuItem>
 				))}
 				<DropdownMenuSeparator />
@@ -96,3 +84,6 @@ export function ProjectSwitcher({
 		</DropdownMenu>
 	);
 }
+
+// Memoize the component to prevent unnecessary rerenders
+export const ProjectSwitcher = memo(ProjectSwitcherComponent);
