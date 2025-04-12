@@ -32,7 +32,7 @@ export async function DashboardBreadcrumb({
 			<BreadcrumbList>
 				<BreadcrumbItem>
 					<BreadcrumbLink href="/dashboard">
-						<Image src="/logo.svg" alt="RapidMVP" width={32} height={32} />
+						<Image src="/logo.svg" alt="RapidMVP" width={28} height={28} />
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 

@@ -59,7 +59,8 @@ export async function DashboardBreadcrumbSwitcherContainer({
 				<WorkspaceSwitcher workspaceId={workspaceId} workspaces={workspaces} />
 			</BreadcrumbItem>
 
-			<Slash size={14} />
+			{projectId && <Slash size={14} />}
+
 			<BreadcrumbItem>
 				<ProjectSwitcher
 					workspaceId={workspaceId}

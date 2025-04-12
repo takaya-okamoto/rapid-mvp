@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Workspace } from "@/db/schema/workspace";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { memo, useState } from "react";
 import { Button } from "../ui/button";
 
@@ -24,6 +25,7 @@ function WorkspaceSwitcherComponent({
 	workspaceId,
 	workspaces,
 }: WorkspaceSwitcherProps) {
+	const router = useRouter();
 	const [activeWorkspace, setActiveWorkspace] = useState(
 		workspaceId
 			? workspaces.find((w) => w.id === Number(workspaceId))
@@ -38,15 +40,17 @@ function WorkspaceSwitcherComponent({
 		<DropdownMenu>
 			<Link
 				href={`/dashboard/${workspaceId}`}
-				className="grid flex-1 text-left text-sm leading-tight cursor-pointer"
+				className="grid flex-1 text-left text-sm cursor-pointer"
 			>
 				<span className="truncate font-semibold">{activeWorkspace.name}</span>
 			</Link>
+
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost">
 					<ChevronsUpDown className="ml-auto" />
 				</Button>
 			</DropdownMenuTrigger>
+
 			<DropdownMenuContent
 				className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
 				align="start"
@@ -59,7 +63,10 @@ function WorkspaceSwitcherComponent({
 				{workspaces.map((workspace) => (
 					<DropdownMenuItem
 						key={workspace.name}
-						onClick={() => setActiveWorkspace(workspace)}
+						onClick={() => {
+							setActiveWorkspace(workspace);
+							router.push(`/dashboard/${workspace.id}`);
+						}}
 						className="gap-2 p-2"
 					>
 						<Link href={`/dashboard/${workspace.id}`}>{workspace.name}</Link>
