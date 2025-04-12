@@ -143,9 +143,7 @@ export function ProjectListSkeleton() {
 						<h1 className="text-3xl font-bold tracking-tight text-primary">
 							Projects
 						</h1>
-						<p className="text-muted-foreground">
-							Manage your projects and collaborate with your team
-						</p>
+						<p className="text-muted-foreground">Manage your projects</p>
 					</div>
 
 					<Button className="gap-2 bg-main hover:bg-main-dark text-main-foreground">
