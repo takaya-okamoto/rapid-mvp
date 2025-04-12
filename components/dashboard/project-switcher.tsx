@@ -81,7 +81,12 @@ function ProjectSwitcherComponent({
 					<div className="flex size-6 items-center justify-center rounded-md border bg-background">
 						<Plus className="size-4" />
 					</div>
-					<div className="font-medium text-muted-foreground">Add project</div>
+					<Button
+						variant="ghost"
+						onClick={() => router.push(`/dashboard/${workspaceId}`)}
+					>
+						Add project
+					</Button>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
