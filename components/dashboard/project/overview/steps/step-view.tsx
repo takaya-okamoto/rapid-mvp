@@ -54,7 +54,7 @@ function StepItem({
 				{/* Circle indicator with number */}
 				<div
 					className={cn(
-						"w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium transition-colors duration-200 mt-3",
+						"w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium transition-colors duration-200",
 						isActive
 							? "bg-main text-main-foreground"
 							: "border-1 border-muted-foreground/40 bg-background text-muted-foreground",
@@ -62,7 +62,7 @@ function StepItem({
 				>
 					{index}
 				</div>
-				{!isLast && <div className="w-0.5 bg-muted-foreground/30 h-20 mt-2" />}
+				{!isLast && <div className="w-0.5 bg-muted-foreground/30 h-21 mt-2" />}
 			</div>
 
 			{/* Content section on the right */}
@@ -78,7 +78,7 @@ function StepItem({
 					</div>
 				) : (
 					<Link href={stepPath} className="block w-full">
-						<div className="p-3 rounded-md border border-transparent hover:border-muted-foreground/10 hover:bg-accent/10 transition-all duration-200 group flex items-center justify-between">
+						<div className="p-3 rounded-md border border-muted-foreground/10 hover:border-muted-foreground/20 hover:bg-accent/10 transition-all duration-200 group flex items-center justify-between">
 							<div>
 								<h3 className="font-medium text-xl text-muted-foreground leading-none pt-[2px] group-hover:text-foreground/80 transition-colors duration-200">
 									{step}
@@ -121,7 +121,7 @@ export function StepView() {
 	return (
 		<div className="flex flex-col h-full w-full px-6">
 			<div className="flex justify-center text-2xl font-bold text-foreground mt-12 mb-4">
-				Project Steps
+				Validate Steps
 			</div>
 
 			<div className="flex-1 flex flex-col">
