@@ -13,8 +13,6 @@ export function DashboardMenu() {
 		return null;
 	}
 
-	const isProjectDetailPage = /^\/dashboard\/projects\/[^\/]+$/.test(pathname);
-
 	const ROOT_MENU_ITEMS = [
 		{
 			label: "Projects",
@@ -40,7 +38,7 @@ export function DashboardMenu() {
 			href: `/dashboard/${workspaceId}/${projectId}/feedbacks`,
 		},
 	];
-	const menuItems = isProjectDetailPage ? PROJECT_MENU_ITEMS : ROOT_MENU_ITEMS;
+	const menuItems = projectId ? PROJECT_MENU_ITEMS : ROOT_MENU_ITEMS;
 
 	const isActive = (href: string) => pathname === href;
 

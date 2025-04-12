@@ -79,7 +79,7 @@ export function CreateProjectDialog({
 					<SparklesIcon className="h-4 w-4 text-main animate-pulse" />
 				</div>
 
-				<div className="absolute bottom-8 left-4">
+				<div className="absolute bottom-6 left-21">
 					<LightbulbIcon className="h-4 w-4 text-warning animate-pulse" />
 				</div>
 

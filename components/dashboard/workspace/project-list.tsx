@@ -75,7 +75,7 @@ export async function ProjectList({ workspaceId }: ProjectListProps) {
 
 			{projects.length === 0 ? (
 				<div className="flex justify-center w-full px-4 lg:px-16">
-					<div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-main bg-gradient-to-b from-background to-muted/30 p-10 text-center max-w-4xl w-full my-10">
+					<div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-main bg-gradient-to-b from-background to-muted/30 p-10 p-14 text-center max-w-4xl w-full my-5">
 						<div className="mb-8">
 							<div className="relative">
 								<div className="absolute -top-8 -left-8">
@@ -103,7 +103,7 @@ export async function ProjectList({ workspaceId }: ProjectListProps) {
 								trigger={
 									<Button
 										size="lg"
-										className="gap-2 px-8 py-5 bg-main hover:bg-main-dark text-main-foreground text-lg h-auto"
+										className="gap-2 px-10 py-3 bg-main hover:bg-main-dark text-main-foreground text-lg h-auto"
 									>
 										<Plus className="h-5 w-5" />
 										<span>Create Your First Project</span>

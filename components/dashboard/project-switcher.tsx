@@ -66,7 +66,7 @@ function ProjectSwitcherComponent({
 				</DropdownMenuLabel>
 				{projects.map((project) => (
 					<DropdownMenuItem
-						key={project.name}
+						key={project.id}
 						onClick={() => {
 							setActiveProject(project);
 							router.push(`/dashboard/${workspaceId}/${project.id}`);
