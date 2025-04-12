@@ -1,7 +1,6 @@
 "use client";
 
 import { SaveIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 import { updateWorkspace } from "@/app/actions/workspace";
 import { Button } from "@/components/ui/button";
@@ -73,8 +72,6 @@ export function WorkspaceSettingsForm({
 	workspaceId: string;
 	initialData: Workspace;
 }) {
-	const router = useRouter();
-
 	const [, formAction, isPending] = useHandleSubmission(
 		async (_, formData: FormData) => {
 			try {
@@ -85,13 +82,14 @@ export function WorkspaceSettingsForm({
 					id: Number.parseInt(workspaceId),
 					name,
 					description,
+					createdAt: initialData.createdAt,
+					updatedAt: new Date(),
 				});
-
-				router.refresh();
 
 				return {
 					success: true,
 					successMessage: "Workspace updated successfully!",
+					redirectPath: "/dashboard",
 				};
 			} catch (error) {
 				console.error(error);

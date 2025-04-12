@@ -1,17 +1,11 @@
 "use server";
 
 import { db } from "@/db";
-import { workspace } from "@/db/schema/workspace";
+import { type Workspace, workspace } from "@/db/schema/workspace";
 import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 
-type UpdateWorkspaceParams = {
-	id: number;
-	name: string;
-	description?: string;
-};
-
-export async function updateWorkspace(params: UpdateWorkspaceParams) {
+export async function updateWorkspace(params: Workspace) {
 	const { id, name, description } = params;
 
 	await db
