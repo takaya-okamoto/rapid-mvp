@@ -5,7 +5,7 @@ import type { Workspace } from "@/db/schema/workspace";
 import { useAuth } from "@clerk/nextjs";
 import { Slash } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BreadcrumbItem } from "../ui/breadcrumb";
 import { Skeleton } from "../ui/skeleton";
 import { ProjectSwitcher } from "./project-switcher";
@@ -19,38 +19,41 @@ export function DashboardBreadcrumbSwitcherContainer() {
 	const [projects, setProjects] = useState<Project[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			if (!userId) return;
+	const fetchData = useCallback(async () => {
+		if (!userId) return;
 
-			try {
-				// Fetch workspaces
-				const response = await fetch(`/api/workspaces?userId=${userId}`);
-				const workspaceData = await response.json();
-				setWorkspaces(workspaceData);
+		try {
+			const response = await fetch("/api/workspaces", {
+				next: { tags: ["workspaces"] },
+			});
+			const workspaceData = await response.json();
+			setWorkspaces(workspaceData);
 
-				// Extract workspace IDs and fetch projects
-				const workspaceIds = workspaceData.map(
-					(workspace: Workspace) => workspace.id,
+			// Extract workspace IDs and fetch projects with no-store cache option
+			const workspaceIds = workspaceData.map(
+				(workspace: Workspace) => workspace.id,
+			);
+
+			if (workspaceIds.length > 0) {
+				const projectsResponse = await fetch(
+					`/api/projects?workspaceIds=${workspaceIds.join(",")}`,
+					{
+						next: { tags: ["projects"] },
+					},
 				);
-				if (workspaceIds.length > 0) {
-					const projectsResponse = await fetch(
-						`/api/projects?workspaceIds=${workspaceIds.join(",")}`,
-					);
-					const projectsData = await projectsResponse.json();
-					setProjects(projectsData);
-				}
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			} finally {
-				setIsLoading(false);
+				const projectsData = await projectsResponse.json();
+				setProjects(projectsData);
 			}
-		};
-
-		if (isLoaded && userId) {
-			fetchData();
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		} finally {
+			setIsLoading(false);
 		}
-	}, [userId, isLoaded]);
+	}, [userId]);
+
+	useEffect(() => {
+		fetchData();
+	}, [fetchData]);
 
 	if (!isLoaded || isLoading) {
 		return <DashboardBreadcrumbSwitcherContainerSkeleton />;

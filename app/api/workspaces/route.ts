@@ -1,13 +1,19 @@
 import { db } from "@/db";
+import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
-	const { searchParams } = new URL(request.url);
-	const userId = searchParams.get("userId");
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
 
-	if (!userId) {
-		return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+export async function GET() {
+	const user = await currentUser();
+
+	if (!user) {
+		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
+
+	const userId = user.id;
 
 	try {
 		const workspaceUsers = await db.query.workspaceUser.findMany({

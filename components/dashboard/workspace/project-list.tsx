@@ -28,9 +28,6 @@ async function getWorkspaceUser(workspaceId: string, userId: string) {
 }
 
 export async function getProjects(workspaceId: string) {
-	// Simulating some network delay to demonstrate loading state
-	// await new Promise(resolve => setTimeout(resolve, 1500));
-
 	return db.query.project.findMany({
 		where: (project, { eq }) =>
 			eq(project.workspaceId, Number.parseInt(workspaceId)),
@@ -46,7 +43,6 @@ export async function ProjectList({ workspaceId }: ProjectListProps) {
 	const { userId } = await auth();
 	if (!userId) throw new Error("User not found");
 
-	// Get workspace information
 	const workspaceUser = await getWorkspaceUser(workspaceId, userId);
 	if (!workspaceUser) return notFound();
 
@@ -78,44 +74,47 @@ export async function ProjectList({ workspaceId }: ProjectListProps) {
 			</div>
 
 			{projects.length === 0 ? (
-				<div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-main bg-gradient-to-b from-background to-muted/30 p-10 text-center max-w-4xl w-full my-10 mx-4 lg:mx-16">
-					<div className="mb-8">
-						<div className="relative">
-							<div className="absolute -top-8 -left-8">
-								<SparklesIcon className="h-7 w-7 text-main animate-pulse" />
-							</div>
-							<div className="rounded-full bg-main/10 p-7 mb-2">
-								<RocketIcon className="h-14 w-14 text-main" />
-							</div>
-							<div className="absolute -bottom-5 -right-8">
-								<LightbulbIcon className="h-7 w-7 text-warning animate-pulse" />
+				<div className="flex justify-center w-full px-4 lg:px-16">
+					<div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-main bg-gradient-to-b from-background to-muted/30 p-10 text-center max-w-4xl w-full my-10">
+						<div className="mb-8">
+							<div className="relative">
+								<div className="absolute -top-8 -left-8">
+									<SparklesIcon className="h-7 w-7 text-main animate-pulse" />
+								</div>
+								<div className="rounded-full bg-main/10 p-7 mb-2">
+									<RocketIcon className="h-14 w-14 text-main" />
+								</div>
+								<div className="absolute -bottom-5 -right-8">
+									<LightbulbIcon className="h-7 w-7 text-warning animate-pulse" />
+								</div>
 							</div>
 						</div>
-					</div>
-					<h2 className="text-3xl font-bold tracking-tight mb-4">
-						Start Your First Project
-					</h2>
-					<p className="text-muted-foreground max-w-lg mb-8 text-lg">
-						Create a project to organize your MVPs, track feedback, and validate
-						your ideas quickly. Bring your vision to life with Rapid MVP!
-					</p>
-					<div className="flex flex-col gap-4 items-center">
-						<CreateProjectDialog
-							workspaceId={workspaceId}
-							trigger={
-								<Button
-									size="lg"
-									className="gap-2 px-8 py-5 bg-main hover:bg-main-dark text-main-foreground text-lg h-auto"
-								>
-									<Plus className="h-5 w-5" />
-									<span>Create Your First Project</span>
-								</Button>
-							}
-						/>
-						<p className="text-sm text-muted-foreground mt-3">
-							Projects help you organize your work and test multiple ideas
-							simultaneously
+						<h2 className="text-3xl font-bold tracking-tight mb-4">
+							Start Your First Project
+						</h2>
+						<p className="text-muted-foreground max-w-lg mb-8 text-lg">
+							Create a project to organize your MVPs, track feedback, and
+							validate your ideas quickly. Bring your vision to life with Rapid
+							MVP!
 						</p>
+						<div className="flex flex-col gap-4 items-center">
+							<CreateProjectDialog
+								workspaceId={workspaceId}
+								trigger={
+									<Button
+										size="lg"
+										className="gap-2 px-8 py-5 bg-main hover:bg-main-dark text-main-foreground text-lg h-auto"
+									>
+										<Plus className="h-5 w-5" />
+										<span>Create Your First Project</span>
+									</Button>
+								}
+							/>
+							<p className="text-sm text-muted-foreground mt-3">
+								Projects help you organize your work and test multiple ideas
+								simultaneously
+							</p>
+						</div>
 					</div>
 				</div>
 			) : (

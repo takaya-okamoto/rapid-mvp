@@ -33,10 +33,10 @@ function ProjectSwitcherComponent({
 	);
 
 	useEffect(() => {
-		if (!activeProject || projects.length === 0) {
+		if ((!activeProject || projects.length === 0) && !projectId) {
 			router.push(`/dashboard/${workspaceId}`);
 		}
-	}, [activeProject, projects, workspaceId, router]);
+	}, [activeProject, projects, workspaceId, router, projectId]);
 
 	if (!activeProject || projects.length === 0) {
 		return null;

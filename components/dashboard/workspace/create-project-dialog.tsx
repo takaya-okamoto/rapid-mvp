@@ -1,8 +1,7 @@
 "use client";
 
 import { LightbulbIcon, RocketIcon, SparklesIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 
 import { createProject } from "@/app/actions/project";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import useHandleSubmission from "@/hooks/use-handle-submission";
 
 type CreateProjectDialogProps = {
 	workspaceId: string;
@@ -32,36 +32,38 @@ export function CreateProjectDialog({
 	open: controlledOpen,
 	onOpenChange: setControlledOpen,
 }: CreateProjectDialogProps) {
-	const router = useRouter();
 	const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
-	const [isCreating, setIsCreating] = useState(false);
 
-	// Support both controlled and uncontrolled modes
 	const open = controlledOpen !== undefined ? controlledOpen : uncontrolledOpen;
 	const setOpen = setControlledOpen || setUncontrolledOpen;
 
-	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		setIsCreating(true);
+	const [, formAction, isPending] = useHandleSubmission(
+		async (_, formData: FormData) => {
+			try {
+				const name = formData.get("name") as string;
+				const description = formData.get("description") as string;
 
-		const formData = new FormData(e.currentTarget);
-		const name = formData.get("name") as string;
-		const description = formData.get("description") as string;
+				const result = await createProject({
+					name,
+					description,
+					workspaceId: Number.parseInt(workspaceId),
+				});
 
-		try {
-			await createProject({
-				name,
-				description,
-				workspaceId: Number.parseInt(workspaceId),
-			});
-			setOpen(false);
-			router.refresh();
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setIsCreating(false);
-		}
-	};
+				setOpen(false);
+				return {
+					success: true,
+					successMessage: "Project created successfully!",
+					redirectPath: result.redirectPath,
+				};
+			} catch (error) {
+				console.error(error);
+				return {
+					success: false,
+					errorMessage: "Failed to create project",
+				};
+			}
+		},
+	);
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -98,7 +100,7 @@ export function CreateProjectDialog({
 					</DialogDescription>
 				</DialogHeader>
 
-				<form onSubmit={handleSubmit}>
+				<form action={formAction}>
 					<div className="space-y-5 py-4">
 						<div className="space-y-2">
 							<Label htmlFor="name" className="font-medium">
@@ -129,10 +131,10 @@ export function CreateProjectDialog({
 					<DialogFooter className="flex-col gap-2 sm:flex-col sm:gap-2">
 						<Button
 							type="submit"
-							disabled={isCreating}
+							disabled={isPending}
 							className="w-full transition-all bg-main hover:bg-main-dark text-main-foreground gap-2 py-5"
 						>
-							{isCreating ? (
+							{isPending ? (
 								<>
 									<svg
 										className="animate-spin -ml-1 mr-2 h-4 w-4 text-main-foreground"

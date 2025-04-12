@@ -2,8 +2,7 @@
 
 import { db } from "@/db";
 import { type NewProject, project } from "@/db/schema/project";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { revalidateTag } from "next/cache";
 
 type CreateProjectParams = {
 	name: string;
@@ -20,11 +19,15 @@ export async function createProject(params: CreateProjectParams) {
 		workspaceId,
 	};
 
-	// Insert the project into the database
-	const result = await db.insert(project).values(newProject).returning();
+	const [createdProject] = await db
+		.insert(project)
+		.values(newProject)
+		.returning();
 
-	// Revalidate the dashboard page to reflect the changes
-	revalidatePath(`/dashboard/${workspaceId}`);
+	revalidateTag("projects");
 
-	redirect(`/dashboard/${workspaceId}/${result[0].id}`);
+	return {
+		success: true,
+		redirectPath: `/dashboard/${workspaceId}/${createdProject.id}`,
+	};
 }
