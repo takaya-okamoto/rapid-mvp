@@ -2,15 +2,11 @@
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
-type DashboardMenuProps = {
-	workspaceId: string;
-	projectId: string | undefined;
-};
-
-export function DashboardMenu({ workspaceId, projectId }: DashboardMenuProps) {
+export function DashboardMenu() {
 	const pathname = usePathname();
+	const { workspaceId, projectId } = useParams();
 
 	// pathnameがまだ取得できない場合は何もレンダリングしない
 	if (!pathname) {

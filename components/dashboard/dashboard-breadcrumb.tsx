@@ -4,29 +4,14 @@ import {
 	BreadcrumbLink,
 	BreadcrumbList,
 } from "@/components/ui/breadcrumb";
-import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import { Suspense } from "react";
 import {
 	DashboardBreadcrumbSwitcherContainer,
 	DashboardBreadcrumbSwitcherContainerSkeleton,
-	preloadDashboardBreadcrumbData,
 } from "./dashboard-breadcrumb-switcher-container";
 
-type DashboardBreadcrumbProps = {
-	workspaceId: string;
-	projectId: string | undefined;
-};
-
-export async function DashboardBreadcrumb({
-	workspaceId,
-	projectId,
-}: DashboardBreadcrumbProps) {
-	const user = await currentUser();
-	if (user) {
-		preloadDashboardBreadcrumbData(user.id);
-	}
-
+export async function DashboardBreadcrumb() {
 	return (
 		<Breadcrumb>
 			<BreadcrumbList>
@@ -37,10 +22,7 @@ export async function DashboardBreadcrumb({
 				</BreadcrumbItem>
 
 				<Suspense fallback={<DashboardBreadcrumbSwitcherContainerSkeleton />}>
-					<DashboardBreadcrumbSwitcherContainer
-						workspaceId={workspaceId}
-						projectId={projectId}
-					/>
+					<DashboardBreadcrumbSwitcherContainer />
 				</Suspense>
 			</BreadcrumbList>
 		</Breadcrumb>

@@ -9,12 +9,14 @@ import { WorkspaceWrapper } from "@/components/dashboard/workspace/workspace-wra
 export default async function DashboardPage({
 	params,
 }: {
-	params: { workspaceId: string };
+	params: Promise<{ workspaceId: string }>;
 }) {
+	const { workspaceId } = await params;
+
 	return (
 		<WorkspaceWrapper>
 			<Suspense fallback={<ProjectListSkeleton />}>
-				<ProjectList workspaceId={params.workspaceId} />
+				<ProjectList workspaceId={workspaceId} />
 			</Suspense>
 		</WorkspaceWrapper>
 	);

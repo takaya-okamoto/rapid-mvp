@@ -1,56 +1,64 @@
-import { db } from "@/db";
-import { currentUser } from "@clerk/nextjs/server";
+"use client";
+
+import type { Project } from "@/db/schema/project";
+import type { Workspace } from "@/db/schema/workspace";
+import { useAuth } from "@clerk/nextjs";
 import { Slash } from "lucide-react";
-import { unstable_noStore as noStore } from "next/cache";
-import { cache } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { BreadcrumbItem } from "../ui/breadcrumb";
 import { Skeleton } from "../ui/skeleton";
 import { ProjectSwitcher } from "./project-switcher";
 import { WorkspaceSwitcher } from "./workspace-switcher";
 
-type DashboardBreadcrumbSwitcherContainerProps = {
-	workspaceId: string;
-	projectId: string | undefined;
-};
+export function DashboardBreadcrumbSwitcherContainer() {
+	const params = useParams<{ workspaceId: string; projectId: string }>();
+	const { workspaceId, projectId } = params;
+	const { userId, isLoaded } = useAuth();
+	const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+	const [projects, setProjects] = useState<Project[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
-// Cache the workspace user query
-const getWorkspaceUser = cache(async (userId: string) => {
-	noStore(); // Opt out of static rendering
-	return db.query.workspaceUser.findMany({
-		where: (workspaceUser, { eq }) => eq(workspaceUser.userId, userId),
-		with: {
-			workspace: true,
-		},
-	});
-});
+	useEffect(() => {
+		const fetchData = async () => {
+			if (!userId) return;
 
-// Cache the projects query
-const getProjects = cache(async (workspaceIds: number[]) => {
-	noStore(); // Opt out of static rendering
-	return db.query.project.findMany({
-		where: (project, { inArray }) => inArray(project.workspaceId, workspaceIds),
-	});
-});
+			try {
+				// Fetch workspaces
+				const response = await fetch(`/api/workspaces?userId=${userId}`);
+				const workspaceData = await response.json();
+				setWorkspaces(workspaceData);
 
-// Preload function to be called by parent components
-export function preloadDashboardBreadcrumbData(userId: string) {
-	void getWorkspaceUser(userId);
-}
+				// Extract workspace IDs and fetch projects
+				const workspaceIds = workspaceData.map(
+					(workspace: Workspace) => workspace.id,
+				);
+				if (workspaceIds.length > 0) {
+					const projectsResponse = await fetch(
+						`/api/projects?workspaceIds=${workspaceIds.join(",")}`,
+					);
+					const projectsData = await projectsResponse.json();
+					setProjects(projectsData);
+				}
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
 
-export async function DashboardBreadcrumbSwitcherContainer({
-	workspaceId,
-	projectId,
-}: DashboardBreadcrumbSwitcherContainerProps) {
-	const user = await currentUser();
+		if (isLoaded && userId) {
+			fetchData();
+		}
+	}, [userId, isLoaded]);
 
-	if (!user) {
-		return null;
+	if (!isLoaded || isLoading) {
+		return <DashboardBreadcrumbSwitcherContainerSkeleton />;
 	}
 
-	const workspaceUser = await getWorkspaceUser(user.id);
-	const workspaces = workspaceUser.map((user) => user.workspace);
-	const workspaceIds = workspaces.map((workspace) => workspace.id);
-	const projects = await getProjects(workspaceIds);
+	if (!userId) {
+		return null;
+	}
 
 	return (
 		<>
@@ -60,25 +68,30 @@ export async function DashboardBreadcrumbSwitcherContainer({
 				<WorkspaceSwitcher workspaceId={workspaceId} workspaces={workspaces} />
 			</BreadcrumbItem>
 
-			{projectId && <Slash size={14} className="mx-1" />}
+			{projectId && (
+				<>
+					<Slash size={14} className="mr-1" />
 
-			<BreadcrumbItem>
-				<ProjectSwitcher
-					workspaceId={workspaceId}
-					projectId={projectId}
-					projects={projects}
-				/>
-			</BreadcrumbItem>
+					<BreadcrumbItem>
+						<ProjectSwitcher
+							workspaceId={workspaceId}
+							projectId={projectId}
+							projects={projects}
+						/>
+					</BreadcrumbItem>
+				</>
+			)}
 		</>
 	);
 }
 
-export async function DashboardBreadcrumbSwitcherContainerSkeleton() {
+export function DashboardBreadcrumbSwitcherContainerSkeleton() {
 	return (
 		<>
-			<Slash size={14} />
-			<Skeleton className="w-20 h-4" />
-			<Skeleton className="w-20 h-4" />
+			<Slash size={14} className="mx-1" />
+			<Skeleton className="w-20 h-4 mx-1" />
+			<Slash size={14} className="mx-1" />
+			<Skeleton className="w-20 h-4 mx-1" />
 		</>
 	);
 }

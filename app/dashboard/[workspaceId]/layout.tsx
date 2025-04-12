@@ -12,20 +12,14 @@ import { Separator } from "@/components/ui/separator";
 
 export default async function DashboardLayout({
 	children,
-	params,
 }: {
 	children: React.ReactNode;
-	params: Promise<{ workspaceId: string; projectId: string | undefined }>;
 }) {
-	const { workspaceId, projectId } = await params;
 	return (
 		<div className="flex flex-col h-screen">
 			<header className="flex h-14 z-70 shrink-0 items-center gap-2 px-6 pt-2">
 				<div className="flex w-full items-center justify-between gap-2">
-					<DashboardBreadcrumb
-						workspaceId={workspaceId}
-						projectId={projectId}
-					/>
+					<DashboardBreadcrumb />
 
 					<div className="flex items-center gap-2">
 						<SignedOut>
@@ -39,7 +33,7 @@ export default async function DashboardLayout({
 				</div>
 			</header>
 
-			<DashboardMenu workspaceId={workspaceId} projectId={projectId} />
+			<DashboardMenu />
 
 			<Separator />
 

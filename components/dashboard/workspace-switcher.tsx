@@ -69,7 +69,7 @@ function WorkspaceSwitcherComponent({
 						}}
 						className="gap-2 p-2"
 					>
-						<Link href={`/dashboard/${workspace.id}`}>{workspace.name}</Link>
+						{workspace.name}
 					</DropdownMenuItem>
 				))}
 				<DropdownMenuSeparator />
