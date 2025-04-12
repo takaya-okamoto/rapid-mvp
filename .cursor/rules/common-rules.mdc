@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+色を使用する時は、app/globals.cssにある色だけを使用してください。
+
+componentは、components/uiの中にあるものを使用してください。
+もしcomponents/uiの中になければ、https://ui.shadcn.com/docsの中から必要なコンポーネントを探して追加してください。
+（Cardは `npx shadcn@latest add card` というコマンドで追加しました。）
+
+SuspenseとSkeltonは必ず使用してください。
+
+Animationを使用する場合は、transitionもつけるようにしてください。

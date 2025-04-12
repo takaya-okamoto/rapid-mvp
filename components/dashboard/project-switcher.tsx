@@ -64,7 +64,7 @@ function ProjectSwitcherComponent({
 				<DropdownMenuLabel className="text-xs text-muted-foreground">
 					Projects
 				</DropdownMenuLabel>
-				{projects.map((project, index) => (
+				{projects.map((project) => (
 					<DropdownMenuItem
 						key={project.name}
 						onClick={() => setActiveProject(project)}

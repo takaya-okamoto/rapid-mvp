@@ -43,9 +43,7 @@ export default async function DashboardLayout({
 
 			<Separator />
 
-			<main className="flex-1 overflow-auto">
-				<div className="max-w-screen-xl px-4 py-6 lg:px-8">{children}</div>
-			</main>
+			{children}
 		</div>
 	);
 }
