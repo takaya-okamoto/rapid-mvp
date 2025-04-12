@@ -45,7 +45,14 @@ function StepItem({
 }) {
 	const params = useParams();
 	const projectId = params.projectId as string;
-	const stepPath = `/dashboard/project/${projectId}/${step.toLowerCase()}`;
+	const workspaceId = params.workspaceId as string;
+
+	const overviewPath = `/dashboard/${workspaceId}/${projectId}/overview`;
+
+	const stepPath =
+		step === Step.Details
+			? overviewPath
+			: `${overviewPath}/${step.toLowerCase()}`;
 
 	return (
 		<div className="flex relative mb-6">
@@ -56,7 +63,7 @@ function StepItem({
 					className={cn(
 						"w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium transition-colors duration-200",
 						isActive
-							? "bg-main text-main-foreground"
+							? "bg-main/80 text-main-foreground"
 							: "border-1 border-muted-foreground/40 bg-background text-muted-foreground",
 					)}
 				>
@@ -68,26 +75,28 @@ function StepItem({
 			{/* Content section on the right */}
 			<div className="flex-1">
 				{isActive ? (
-					<div className="p-3 rounded-md border border-muted-foreground/10 bg-accent/30">
-						<h3 className="font-medium text-xl text-foreground leading-none">
-							{step}
-						</h3>
-						<p className="text-muted-foreground mt-1">
-							{stepDescriptions[step]}
-						</p>
+					<div className="p-3 rounded-md border border-muted-foreground/10 bg-accent/30 flex items-center justify-between transition-all duration-500 ease-in-out">
+						<div>
+							<h3 className="font-medium text-xl text-foreground leading-none transition-colors duration-500 ease-in-out">
+								{step}
+							</h3>
+							<p className="text-muted-foreground mt-1 transition-colors duration-500 ease-in-out">
+								{stepDescriptions[step]}
+							</p>
+						</div>
 					</div>
 				) : (
 					<Link href={stepPath} className="block w-full">
-						<div className="p-3 rounded-md border border-muted-foreground/10 hover:border-muted-foreground/20 hover:bg-accent/10 transition-all duration-200 group flex items-center justify-between">
+						<div className="p-3 rounded-md border border-muted-foreground/10 hover:border-muted-foreground/20 hover:bg-accent/10 transition-all duration-300 ease-in-out group flex items-center justify-between">
 							<div>
-								<h3 className="font-medium text-xl text-muted-foreground leading-none pt-[2px] group-hover:text-foreground/80 transition-colors duration-200">
+								<h3 className="font-medium text-xl text-muted-foreground leading-none group-hover:text-foreground/80 transition-colors duration-300 ease-in-out">
 									{step}
 								</h3>
-								<p className="text-muted-foreground/70 mt-1 group-hover:text-muted-foreground/90 transition-colors duration-200">
+								<p className="text-muted-foreground/70 mt-1 group-hover:text-muted-foreground/90 transition-colors duration-300 ease-in-out">
 									{stepDescriptions[step]}
 								</p>
 							</div>
-							<ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors duration-200" />
+							<ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors duration-300 ease-in-out" />
 						</div>
 					</Link>
 				)}

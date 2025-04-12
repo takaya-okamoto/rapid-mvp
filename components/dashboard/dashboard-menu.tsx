@@ -40,7 +40,14 @@ export function DashboardMenu() {
 	];
 	const menuItems = projectId ? PROJECT_MENU_ITEMS : ROOT_MENU_ITEMS;
 
-	const isActive = (href: string) => pathname === href;
+	const isActive = (href: string) => {
+		// Make Overview active for all overview subpaths
+		if (href.includes("/overview") && pathname.includes("/overview")) {
+			return true;
+		}
+		// Otherwise use exact match
+		return pathname === href;
+	};
 
 	return (
 		<nav className="flex overflow-x-auto px-6 w-full">
