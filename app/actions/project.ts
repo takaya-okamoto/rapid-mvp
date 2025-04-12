@@ -28,6 +28,6 @@ export async function createProject(params: CreateProjectParams) {
 
 	return {
 		success: true,
-		redirectPath: `/dashboard/${workspaceId}/${createdProject.id}`,
+		redirectPath: `/dashboard/${workspaceId}/${createdProject.id}/overview`,
 	};
 }

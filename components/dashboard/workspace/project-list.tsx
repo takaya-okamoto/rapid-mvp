@@ -138,7 +138,7 @@ export function ProjectListSkeleton() {
 	return (
 		<div className="w-full space-y-2">
 			<div className="pb-4 border-b w-full">
-				<div className="flex items-end justify-between px-4 py-6 lg:px-16">
+				<div className="flex items-end justify-between px-4 pt-6 pb-4 lg:px-16">
 					<div>
 						<h1 className="text-3xl font-bold tracking-tight text-primary">
 							Projects

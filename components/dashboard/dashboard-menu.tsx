@@ -27,7 +27,7 @@ export function DashboardMenu() {
 	const PROJECT_MENU_ITEMS = [
 		{
 			label: "Overview",
-			href: `/dashboard/${workspaceId}/${projectId}`,
+			href: `/dashboard/${workspaceId}/${projectId}/overview`,
 		},
 		{
 			label: "MVPs",

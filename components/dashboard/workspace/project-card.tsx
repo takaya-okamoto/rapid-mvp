@@ -31,7 +31,7 @@ export function ProjectCard({ project, workspaceId }: ProjectCardProps) {
 
 	return (
 		<Link
-			href={`/dashboard/${workspaceId}/${project.id}`}
+			href={`/dashboard/${workspaceId}/${project.id}/overview`}
 			className="block h-full transition-all hover:scale-[1.02]"
 		>
 			<Card className="h-full border border-main/20 overflow-hidden hover:shadow-lg hover:border-main/40 transition-all duration-300 group">

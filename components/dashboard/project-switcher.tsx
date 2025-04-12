@@ -45,7 +45,7 @@ function ProjectSwitcherComponent({
 	return (
 		<DropdownMenu>
 			<Link
-				href={`/dashboard/${workspaceId}/${activeProject.id}`}
+				href={`/dashboard/${workspaceId}/${activeProject.id}/overview`}
 				className="grid flex-1 text-left text-sm leading-tight cursor-pointer"
 			>
 				<span className="truncate font-semibold">{activeProject.name}</span>
@@ -69,7 +69,7 @@ function ProjectSwitcherComponent({
 						key={project.id}
 						onClick={() => {
 							setActiveProject(project);
-							router.push(`/dashboard/${workspaceId}/${project.id}`);
+							router.push(`/dashboard/${workspaceId}/${project.id}/overview`);
 						}}
 						className="gap-2 p-2"
 					>
