@@ -53,16 +53,14 @@ export async function ProjectList({ workspaceId }: ProjectListProps) {
 	const projects = await getProjects(workspaceId);
 
 	return (
-		<div className="space-y-8 w-full">
-			<div className="pb-4 border-b">
-				<div className="flex items-center justify-between">
+		<div className="space-y-2 w-full">
+			<div className="pb-4 border-b w-full">
+				<div className="flex items-end justify-between px-4 pt-6 pb-4 lg:px-16">
 					<div>
 						<h1 className="text-3xl font-bold tracking-tight text-primary">
 							Projects
 						</h1>
-						<p className="text-muted-foreground">
-							Manage your projects and collaborate with your team
-						</p>
+						<p className="text-muted-foreground">Manage your projects</p>
 					</div>
 
 					<div className="flex items-center justify-end">
@@ -80,7 +78,7 @@ export async function ProjectList({ workspaceId }: ProjectListProps) {
 			</div>
 
 			{projects.length === 0 ? (
-				<div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-main bg-gradient-to-b from-background to-muted/30 p-10 text-center max-w-4xl w-full my-10">
+				<div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-main bg-gradient-to-b from-background to-muted/30 p-10 text-center max-w-4xl w-full my-10 mx-4 lg:mx-16">
 					<div className="mb-8">
 						<div className="relative">
 							<div className="absolute -top-8 -left-8">
@@ -121,7 +119,7 @@ export async function ProjectList({ workspaceId }: ProjectListProps) {
 					</div>
 				</div>
 			) : (
-				<div className="space-y-6">
+				<div className="space-y-6 px-4 py-6 lg:px-16">
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 w-full">
 						{projects.map((project) => (
 							<ProjectCard
@@ -139,9 +137,9 @@ export async function ProjectList({ workspaceId }: ProjectListProps) {
 
 export function ProjectListSkeleton() {
 	return (
-		<div className="w-full space-y-8">
-			<div className="pb-4 border-b">
-				<div className="flex items-center justify-between">
+		<div className="w-full space-y-2">
+			<div className="pb-4 border-b w-full">
+				<div className="flex items-end justify-between px-4 py-6 lg:px-16">
 					<div>
 						<h1 className="text-3xl font-bold tracking-tight text-primary">
 							Projects
@@ -158,7 +156,7 @@ export function ProjectListSkeleton() {
 				</div>
 			</div>
 
-			<div className="space-y-6">
+			<div className="space-y-6 px-4 py-6 lg:px-16">
 				<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 w-full">
 					{["skeleton-card-1", "skeleton-card-2", "skeleton-card-3"].map(
 						(id) => (
