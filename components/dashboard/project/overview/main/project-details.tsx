@@ -25,7 +25,7 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
 						description={project.description}
 						onUpdate={handleUpdateDescription}
 					/>
-					<ProjectMetrics project={project} />
+					<ProjectMetrics />
 					<div className="flex justify-end pt-4">
 						<NextStepButton
 							workspaceId={project.workspaceId}
