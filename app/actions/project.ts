@@ -2,6 +2,7 @@
 
 import { db } from "@/db";
 import { type NewProject, project } from "@/db/schema/project";
+import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 
 type CreateProjectParams = {
@@ -30,4 +31,52 @@ export async function createProject(params: CreateProjectParams) {
 		success: true,
 		redirectPath: `/dashboard/${workspaceId}/${createdProject.id}/overview`,
 	};
+}
+
+type UpdateProjectNameParams = {
+	projectId: number;
+	name: string;
+};
+
+export async function updateProjectName(params: UpdateProjectNameParams) {
+	const { projectId, name } = params;
+
+	if (!name.trim()) {
+		return { success: false, error: "Project name cannot be empty" };
+	}
+
+	await db
+		.update(project)
+		.set({
+			name,
+			updatedAt: new Date(),
+		})
+		.where(eq(project.id, projectId));
+
+	revalidateTag("projects");
+
+	return { success: true };
+}
+
+type UpdateProjectDescriptionParams = {
+	projectId: number;
+	description: string;
+};
+
+export async function updateProjectDescription(
+	params: UpdateProjectDescriptionParams,
+) {
+	const { projectId, description } = params;
+
+	await db
+		.update(project)
+		.set({
+			description: description.trim() ? description : null,
+			updatedAt: new Date(),
+		})
+		.where(eq(project.id, projectId));
+
+	revalidateTag("projects");
+
+	return { success: true };
 }

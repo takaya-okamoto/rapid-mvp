@@ -13,15 +13,15 @@ export default function OverviewLayout({
 }: OverviewLayoutProps) {
 	return (
 		<div className="flex flex-1 w-full">
-			<div className="w-1/4">{steps}</div>
+			<div className="w-1/6">{steps}</div>
 
 			<Separator orientation="vertical" />
 
-			<div className="w-1/2">{main}</div>
+			<div className="w-2/3">{main}</div>
 
 			<Separator orientation="vertical" />
 
-			<div className="w-1/4">{children}</div>
+			<div className="w-1/3">{children}</div>
 		</div>
 	);
 }

@@ -1,8 +1,13 @@
 import { neon } from "@neondatabase/serverless";
 import { loadEnvConfig } from "@next/env";
 import { drizzle } from "drizzle-orm/neon-http";
+import { chat } from "./schema/chat";
+import { document } from "./schema/document";
+import { message } from "./schema/message";
 import { project } from "./schema/project";
+import { suggestion } from "./schema/suggestion";
 import { user } from "./schema/user";
+import { vote } from "./schema/vote";
 import { workspace, workspaceRelations } from "./schema/workspace";
 import { workspaceUser, workspaceUserRelations } from "./schema/workspace-user";
 
@@ -22,6 +27,13 @@ const schema = {
 	workspaceUser,
 	workspaceRelations,
 	workspaceUserRelations,
+
+	// chat関連
+	chat,
+	vote,
+	message,
+	document,
+	suggestion,
 };
 
 // スキーマを渡してdrizzleインスタンスを作成

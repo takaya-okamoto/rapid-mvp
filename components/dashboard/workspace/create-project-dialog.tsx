@@ -116,7 +116,7 @@ export function CreateProjectDialog({
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="description" className="font-medium">
-								Vision & Goals
+								Description
 							</Label>
 							<Textarea
 								id="description"
