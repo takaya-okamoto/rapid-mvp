@@ -22,6 +22,7 @@ import equal from "fast-deep-equal";
 import { AnimatePresence, motion } from "framer-motion";
 import { Pencil, SparklesIcon } from "lucide-react";
 import { memo, useState } from "react";
+import { ProjectToolComponent } from "./tool/project-tool-component";
 
 const PurePreviewMessage = ({
 	chatId,
@@ -153,38 +154,18 @@ const PurePreviewMessage = ({
 
 								if (state === "call") {
 									const { args } = toolInvocation;
+									console.log({ args });
 
 									return (
 										<div
 											key={toolCallId}
 											className={cx({
-												skeleton: ["getWeather"].includes(toolName),
+												skeleton: ["updateProject"].includes(toolName),
 											})}
 										>
-											{
-												// toolName === "getWeather" ? (
-												// 	<Weather />
-												// ) :
-												// toolName === "createDocument" ? (
-												// 	<DocumentPreview
-												// 		isReadonly={isReadonly}
-												// 		args={args}
-												// 	/>
-												// ) : toolName === "updateDocument" ? (
-												// 	<DocumentToolCall
-												// 		type="update"
-												// 		args={args}
-												// 		isReadonly={isReadonly}
-												// 	/>
-												// ) : toolName === "requestSuggestions" ? (
-												// 	<DocumentToolCall
-												// 		type="request-suggestions"
-												// 		args={args}
-												// 		isReadonly={isReadonly}
-												// 	/>
-												// ) : null
-												<pre>{JSON.stringify(args, null, 2)}</pre>
-											}
+											{toolName === "updateProjectTool" ? (
+												<ProjectToolComponent />
+											) : null}
 										</div>
 									);
 								}
@@ -194,32 +175,12 @@ const PurePreviewMessage = ({
 
 									return (
 										<div key={toolCallId}>
-											{
-												// toolName === "getWeather" ? (
-												// 	<Weather weatherAtLocation={result} />
-												// ) :
-
-												// toolName === "createDocument" ? (
-												// 	<DocumentPreview
-												// 		isReadonly={isReadonly}
-												// 		result={result}
-												// 	/>
-												// ) : toolName === "updateDocument" ? (
-												// 	<DocumentToolResult
-												// 		type="update"
-												// 		result={result}
-												// 		isReadonly={isReadonly}
-												// 	/>
-												// ) : toolName === "requestSuggestions" ? (
-												// 	<DocumentToolResult
-												// 		type="request-suggestions"
-												// 		result={result}
-												// 		isReadonly={isReadonly}
-												// 	/>
-												// ) : (
-												<pre>{JSON.stringify(result, null, 2)}</pre>
-												// )
-											}
+											{toolName === "updateProjectTool" ? (
+												<ProjectToolComponent
+													name={result.name}
+													description={result.description}
+												/>
+											) : null}
 										</div>
 									);
 								}

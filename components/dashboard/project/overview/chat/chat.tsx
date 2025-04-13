@@ -2,11 +2,11 @@
 
 import { Messages } from "@/components/dashboard/project/overview/chat/messages";
 import { MultimodalInput } from "@/components/dashboard/project/overview/chat/multimodal-input";
-// import { getChatHistoryPaginationKey } from "@/components/dashboard/project/overview/chat/sidebar-history";
 import type { Vote } from "@/db/schema/vote";
 import { fetcher, generateUUID } from "@/lib/utils";
 import { useChat } from "@ai-sdk/react";
 import type { Attachment, UIMessage } from "ai";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import useSWR from "swr";
@@ -24,6 +24,8 @@ export function Chat({
 	workspaceId: string;
 	projectId: string;
 }) {
+	const router = useRouter();
+
 	const {
 		messages,
 		setMessages,
@@ -41,7 +43,7 @@ export function Chat({
 		sendExtraMessageFields: true,
 		generateId: generateUUID,
 		onFinish: () => {
-			console.log("Finish");
+			router.refresh();
 		},
 		onError: (error) => {
 			console.error(error);

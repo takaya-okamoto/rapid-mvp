@@ -7,7 +7,11 @@ import remarkGfm from "remark-gfm";
 const components: Partial<Components> = {
 	// @ts-expect-error - CodeBlock component has custom props not in ReactMarkdown types
 	code: CodeBlock,
-	pre: ({ children }) => <>{children}</>,
+	pre: ({ children, ...props }) => (
+		<div className="not-prose">
+			<pre {...props}>{children}</pre>
+		</div>
+	),
 	ol: ({ children, ...props }) => {
 		return (
 			<ol className="list-decimal list-outside ml-4" {...props}>

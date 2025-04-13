@@ -7,6 +7,7 @@ import {
 } from "@/db/queries";
 import { systemPrompt } from "@/lib/ai/prompts";
 import { myProvider } from "@/lib/ai/providers";
+import { updateProjectTool } from "@/lib/ai/tools/project-tool";
 // import { createDocument } from "@/lib/ai/tools/create-document";
 // import { getWeather } from "@/lib/ai/tools/get-weather";
 // import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
@@ -47,9 +48,6 @@ export async function POST(request: Request) {
 
 		const user = await currentUser();
 
-		console.log("workspaceId", workspaceId);
-		console.log("projectId", projectId);
-
 		if (!user) {
 			return new Response("Unauthorized", { status: 401 });
 		}
@@ -68,8 +66,6 @@ export async function POST(request: Request) {
 				message: userMessage,
 			});
 
-			console.log("saving chat");
-
 			await saveChat({
 				id,
 				userId: user.id,
@@ -77,15 +73,11 @@ export async function POST(request: Request) {
 				workspaceId: Number(workspaceId),
 				projectId: Number(projectId),
 			});
-
-			console.log("chat saved");
 		} else {
 			if (chat.userId !== user.id) {
 				return new Response("Unauthorized", { status: 401 });
 			}
 		}
-
-		console.log("saving messages");
 
 		await saveMessages({
 			messages: [
@@ -100,15 +92,17 @@ export async function POST(request: Request) {
 			],
 		});
 
-		console.log("messages saved");
-
 		return createDataStreamResponse({
 			execute: (dataStream) => {
 				const result = streamText({
 					model: myProvider.languageModel(selectedChatModel),
-					system: systemPrompt(),
+					system: systemPrompt({
+						projectId: Number(projectId),
+						workspaceId: Number(workspaceId),
+					}),
 					messages,
 					maxSteps: 5,
+					experimental_activeTools: ["updateProjectTool"],
 					// experimental_activeTools:
 					// 	selectedChatModel === "chat-model-reasoning"
 					// 		? []
@@ -120,6 +114,7 @@ export async function POST(request: Request) {
 					// 			],
 					experimental_transform: smoothStream({ chunking: "word" }),
 					experimental_generateMessageId: generateUUID,
+					tools: { updateProjectTool },
 					// tools: {
 					// 	getWeather,
 					// 	createDocument: createDocument({ user, dataStream }),

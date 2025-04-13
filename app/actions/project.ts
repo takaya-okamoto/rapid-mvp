@@ -3,7 +3,7 @@
 import { db } from "@/db";
 import { type NewProject, project } from "@/db/schema/project";
 import { eq } from "drizzle-orm";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 type CreateProjectParams = {
 	name: string;
@@ -77,6 +77,32 @@ export async function updateProjectDescription(
 		.where(eq(project.id, projectId));
 
 	revalidateTag("projects");
+
+	return { success: true };
+}
+
+type UpdateProjectParams = {
+	projectId: number;
+	workspaceId: number;
+	name?: string;
+	description?: string;
+};
+
+export async function updateProject(params: UpdateProjectParams) {
+	const { projectId, workspaceId, name, description } = params;
+
+	await db
+		.update(project)
+		.set({
+			name,
+			description,
+			updatedAt: new Date(),
+		})
+		.where(eq(project.id, projectId));
+
+	const revalidatePathParams = `/dashboard/${workspaceId}/${projectId}/overview`;
+
+	revalidatePath(revalidatePathParams);
 
 	return { success: true };
 }
