@@ -16,6 +16,7 @@ import { db } from ".";
 import { type Chat, chat } from "./schema/chat";
 import { document } from "./schema/document";
 import { type DBMessage, message } from "./schema/message";
+import { project } from "./schema/project";
 import { type Suggestion, suggestion } from "./schema/suggestion";
 import { type User, user } from "./schema/user";
 import { vote } from "./schema/vote";
@@ -371,6 +372,20 @@ export async function deleteMessagesByChatIdAfterTimestamp({
 		console.error(
 			"Failed to delete messages by id after timestamp from database",
 		);
+		throw error;
+	}
+}
+
+export async function getProject({ id }: { id: string }) {
+	try {
+		const [selectedProject] = await db
+			.select()
+			.from(project)
+			.where(eq(project.id, Number(id)));
+
+		return selectedProject;
+	} catch (error) {
+		console.error("Failed to get project by id from database");
 		throw error;
 	}
 }

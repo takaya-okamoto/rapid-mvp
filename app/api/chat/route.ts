@@ -1,4 +1,5 @@
 import { generateTitleFromUserMessage } from "@/app/actions/chat";
+import { getPersonas } from "@/app/actions/persona";
 import {
 	deleteChatById,
 	getChatById,
@@ -7,6 +8,7 @@ import {
 } from "@/db/queries";
 import { systemPrompt } from "@/lib/ai/prompts";
 import { myProvider } from "@/lib/ai/providers";
+import { mutatePersonaTool } from "@/lib/ai/tools/persona-tool";
 import { updateProjectTool } from "@/lib/ai/tools/project-tool";
 // import { createDocument } from "@/lib/ai/tools/create-document";
 // import { getWeather } from "@/lib/ai/tools/get-weather";
@@ -60,8 +62,9 @@ export async function POST(request: Request) {
 
 		const chat = await getChatById({ id });
 
+		const personas = await getPersonas(Number(projectId));
+
 		if (!chat) {
-			console.log("generating title");
 			const title = await generateTitleFromUserMessage({
 				message: userMessage,
 			});
@@ -99,10 +102,11 @@ export async function POST(request: Request) {
 					system: systemPrompt({
 						projectId: Number(projectId),
 						workspaceId: Number(workspaceId),
+						personas: personas,
 					}),
 					messages,
 					maxSteps: 5,
-					experimental_activeTools: ["updateProjectTool"],
+					experimental_activeTools: ["updateProjectTool", "mutatePersonaTool"],
 					// experimental_activeTools:
 					// 	selectedChatModel === "chat-model-reasoning"
 					// 		? []
@@ -114,7 +118,7 @@ export async function POST(request: Request) {
 					// 			],
 					experimental_transform: smoothStream({ chunking: "word" }),
 					experimental_generateMessageId: generateUUID,
-					tools: { updateProjectTool },
+					tools: { updateProjectTool, mutatePersonaTool },
 					// tools: {
 					// 	getWeather,
 					// 	createDocument: createDocument({ user, dataStream }),
@@ -124,7 +128,19 @@ export async function POST(request: Request) {
 					// 		dataStream,
 					// 	}),
 					// },
+					onStepFinish: async ({
+						text,
+						toolCalls,
+						toolResults,
+						finishReason,
+						usage,
+					}) => {
+						console.log({ text, toolCalls, toolResults, finishReason, usage });
+					},
 					onFinish: async ({ response }) => {
+						console.log({ response });
+
+						console.log(response.messages[0]);
 						if (user.id) {
 							try {
 								const assistantId = getTrailingMessageId({
@@ -156,7 +172,7 @@ export async function POST(request: Request) {
 									],
 								});
 							} catch (error) {
-								console.error("Failed to save chat", error);
+								console.error("Failed to save chat", error, null, 2);
 							}
 						}
 					},
@@ -166,18 +182,28 @@ export async function POST(request: Request) {
 					},
 				});
 
+				result.toDataStreamResponse({
+					getErrorMessage: (error) => {
+						console.error("=== Failed to process chat ===", error, null, 2);
+						return "Oops, an error occurred!";
+					},
+				});
+
+				console.log({ result });
+
 				result.consumeStream();
 
 				result.mergeIntoDataStream(dataStream, {
 					sendReasoning: true,
 				});
 			},
-			onError: () => {
+			onError: (e) => {
+				console.error("Failed to process chat", e, null, 2);
 				return "Oops, an error occurred!";
 			},
 		});
 	} catch (error) {
-		console.error("Failed to process chat", error);
+		console.error("Failed to process chat", error, null, 2);
 		return new Response("An error occurred while processing your request!", {
 			status: 404,
 		});

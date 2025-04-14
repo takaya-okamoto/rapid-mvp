@@ -160,11 +160,17 @@ const PurePreviewMessage = ({
 										<div
 											key={toolCallId}
 											className={cx({
-												skeleton: ["updateProject"].includes(toolName),
+												skeleton: [
+													"updateProject",
+													"mutatePersonaTool",
+												].includes(toolName),
 											})}
 										>
 											{toolName === "updateProjectTool" ? (
 												<ProjectToolComponent />
+											) : toolName === "mutatePersonaTool" ? (
+												// <PersonaToolComponent />
+												<div>PersonaToolComponent</div>
 											) : null}
 										</div>
 									);
@@ -180,6 +186,8 @@ const PurePreviewMessage = ({
 													name={result.name}
 													description={result.description}
 												/>
+											) : toolName === "mutatePersonaTool" ? (
+												<div>PersonaToolComponent</div>
 											) : null}
 										</div>
 									);

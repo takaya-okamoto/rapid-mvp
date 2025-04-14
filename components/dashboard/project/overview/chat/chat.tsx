@@ -6,8 +6,8 @@ import type { Vote } from "@/db/schema/vote";
 import { fetcher, generateUUID } from "@/lib/utils";
 import { useChat } from "@ai-sdk/react";
 import type { Attachment, UIMessage } from "ai";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import useSWR from "swr";
 
@@ -17,14 +17,19 @@ export function Chat({
 	selectedChatModel,
 	workspaceId,
 	projectId,
+	projectDescription,
 }: {
 	id: string;
 	initialMessages: Array<UIMessage>;
 	selectedChatModel: string;
 	workspaceId: string;
 	projectId: string;
+	projectDescription: string;
 }) {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+
+	const persona = useMemo(() => searchParams.get("persona"), [searchParams]);
 
 	const {
 		messages,
@@ -35,6 +40,7 @@ export function Chat({
 		status,
 		stop,
 		reload,
+		append,
 	} = useChat({
 		id,
 		body: { id, selectedChatModel: selectedChatModel, workspaceId, projectId },
@@ -47,7 +53,7 @@ export function Chat({
 		},
 		onError: (error) => {
 			console.error(error);
-			toast.error("An error occurred, please try again!");
+			toast.error(error.message);
 		},
 	});
 
@@ -57,6 +63,27 @@ export function Chat({
 	);
 
 	const [attachments, setAttachments] = useState<Array<Attachment>>([]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (persona) {
+			console.log({ projectDescription });
+			append({
+				id: generateUUID(),
+				role: "user",
+				content: `Create a persona.
+
+Here is the project description: \n
+${projectDescription}`,
+			});
+
+			// remove the persona query param
+			router.replace(
+				`/dashboard/${workspaceId}/${projectId}/overview/personas`,
+			);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [persona]);
 
 	return (
 		<>

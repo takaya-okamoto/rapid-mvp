@@ -39,7 +39,7 @@ function ProjectDetailsSkeleton() {
 						<Skeleton className="h-20 w-full" />
 						<Skeleton className="h-20 w-full" />
 					</div>
-					<div className="flex justify-center pt-4">
+					<div className="flex justify-end pt-4">
 						<Skeleton className="h-10 w-40" />
 					</div>
 				</div>
