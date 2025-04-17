@@ -14,9 +14,7 @@ export const regularPrompt = (params: SystemPromptParams) => {
 You are a friendly assistant! Keep your responses concise and helpful.
 
 ## Rules
-- Always use the web_search_preview tool
 - When the user is stuck, propose a question or suggestion.
-- When the user asks to search the web, use \`web_search_preview\` tool.
 
 Here is the project you are working on:
 Project ID: ${projectId}
