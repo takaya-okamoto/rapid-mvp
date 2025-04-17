@@ -49,11 +49,7 @@ ${
 		: ""
 }
 
-This is a guide for using business development tools:  \`web_search_preview\`, \`updateProject\`, \`mutatePersona\`, \`createProblemTool\`, \`updateProblemTool\`, \`deleteProblemTool\`.
-
-**When to use \`web_search_preview\`:**
-- When the user asks to search the web.
-- ユーザーが聞いていることに対して、webで調べてみたところ、その情報があるかもしれないと思ったら、web_search_previewを使ってください。
+This is a guide for using business development tools:  \`updateProject\`, \`mutatePersona\`, \`createProblemTool\`, \`updateProblemTool\`, \`deleteProblemTool\` \`webSearchTool\`.
 
 **When to use \`updateProject\`:**
 - When the user asks to update the project name or description
@@ -69,6 +65,8 @@ This is a guide for using business development tools:  \`web_search_preview\`, \
 - Use \`updateProblemTool\` when the user wants to modify an existing problem.
 - Use \`deleteProblemTool\` when the user wants to remove a problem from the project.
 
+**When to use \`webSearchTool\`:**
+- When the user asks to search the web.
 `;
 };
 
