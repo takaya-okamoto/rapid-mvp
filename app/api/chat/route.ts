@@ -10,6 +10,7 @@ import { systemPrompt } from "@/lib/ai/prompts";
 import { myProvider } from "@/lib/ai/providers";
 import { mutatePersonaTool } from "@/lib/ai/tools/persona-tool";
 import { updateProjectTool } from "@/lib/ai/tools/project-tool";
+import { webSearchTool } from "@/lib/ai/tools/web-search-tool";
 // import { createDocument } from "@/lib/ai/tools/create-document";
 // import { getWeather } from "@/lib/ai/tools/get-weather";
 // import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
@@ -20,6 +21,7 @@ import {
 	getMostRecentUserMessage,
 	getTrailingMessageId,
 } from "@/lib/utils";
+import { openai } from "@ai-sdk/openai";
 import { currentUser } from "@clerk/nextjs/server";
 
 import {
@@ -106,28 +108,13 @@ export async function POST(request: Request) {
 					}),
 					messages,
 					maxSteps: 5,
-					experimental_activeTools: ["updateProjectTool", "mutatePersonaTool"],
-					// experimental_activeTools:
-					// 	selectedChatModel === "chat-model-reasoning"
-					// 		? []
-					// 		: [
-					// 				"getWeather",
-					// 				"createDocument",
-					// 				"updateDocument",
-					// 				"requestSuggestions",
-					// 			],
 					experimental_transform: smoothStream({ chunking: "word" }),
 					experimental_generateMessageId: generateUUID,
-					tools: { updateProjectTool, mutatePersonaTool },
-					// tools: {
-					// 	getWeather,
-					// 	createDocument: createDocument({ user, dataStream }),
-					// 	updateDocument: updateDocument({ user, dataStream }),
-					// 	requestSuggestions: requestSuggestions({
-					// 		user,
-					// 		dataStream,
-					// 	}),
-					// },
+					tools: {
+						updateProjectTool,
+						mutatePersonaTool,
+						webSearchTool,
+					},
 					onStepFinish: async ({
 						text,
 						toolCalls,
@@ -189,7 +176,9 @@ export async function POST(request: Request) {
 					},
 				});
 
-				console.log({ result });
+				if (result?.sources) {
+					console.log({ sources: result.sources });
+				}
 
 				result.consumeStream();
 

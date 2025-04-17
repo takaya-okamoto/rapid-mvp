@@ -14,10 +14,9 @@ export const regularPrompt = (params: SystemPromptParams) => {
 You are a friendly assistant! Keep your responses concise and helpful.
 
 ## Rules
+- Always use the web_search_preview tool
 - When the user is stuck, propose a question or suggestion.
-- When the user asks to create a new persona, propose a question or suggestion.
-- When the user asks to update a persona, propose a question or suggestion.
-- mutateする時は、mutateする情報を繰り返して言わないでください。
+- When the user asks to search the web, use \`web_search_preview\` tool.
 
 Here is the project you are working on:
 Project ID: ${projectId}
@@ -50,7 +49,11 @@ ${
 		: ""
 }
 
-This is a guide for using business development tools: \`updateProject\`, \`mutatePersona\`.
+This is a guide for using business development tools:  \`web_search_preview\`, \`updateProject\`, \`mutatePersona\`,.
+
+**When to use \`web_search_preview\`:**
+- When the user asks to search the web.
+- ユーザーが聞いていることに対して、webで調べてみたところ、その情報があるかもしれないと思ったら、web_search_previewを使ってください。
 
 **When to use \`updateProject\`:**
 - When the user asks to update the project name or description
@@ -60,6 +63,7 @@ This is a guide for using business development tools: \`updateProject\`, \`mutat
 - When the user asks to create a new persona. 
 - When the user asks to update a persona.
 - personaIdは、personas you have createdから条件に合致するidを選択してください。
+
 `;
 };
 

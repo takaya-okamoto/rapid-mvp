@@ -1,10 +1,11 @@
 "use client";
 
-import { updatePersona } from "@/app/actions/persona";
+import { deletePersona, updatePersona } from "@/app/actions/persona";
 import { Button } from "@/components/ui/button";
 import type { Persona } from "@/db/schema/persona";
 import { Sparkles, UserIcon } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { EditablePersonaCard } from "./editable-persona-card";
 
 type PersonasMainProps = {
@@ -18,6 +19,8 @@ export function PersonasMain({
 	projectId,
 	workspaceId,
 }: PersonasMainProps) {
+	const [isLoading, setIsLoading] = useState(false);
+
 	// Handler for updating personas
 	const handleUpdatePersona = async (
 		updatedPersona: Persona,
@@ -37,6 +40,18 @@ export function PersonasMain({
 			await updatePersona(submitData);
 		} catch (error) {
 			console.error("PersonasMain: Error updating persona", error);
+		}
+	};
+
+	// Handler for deleting personas
+	const handleDeletePersona = async (personaId: string): Promise<void> => {
+		setIsLoading(true);
+		try {
+			await deletePersona(personaId, Number(projectId), Number(workspaceId));
+		} catch (error) {
+			console.error("PersonasMain: Error deleting persona", error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -89,6 +104,7 @@ export function PersonasMain({
 							key={persona.id}
 							persona={persona}
 							handleUpdatePersona={handleUpdatePersona}
+							handleDeletePersona={handleDeletePersona}
 						/>
 					))}
 				</div>

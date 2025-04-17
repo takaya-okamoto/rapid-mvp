@@ -86,6 +86,8 @@ export const mutatePersonaTool = tool({
 				values,
 				goals,
 				painPoints,
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
 			});
 
 			if (!updateResult.success) {

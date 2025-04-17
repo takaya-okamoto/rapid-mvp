@@ -67,7 +67,6 @@ export function Chat({
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (persona) {
-			console.log({ projectDescription });
 			append({
 				id: generateUUID(),
 				role: "user",

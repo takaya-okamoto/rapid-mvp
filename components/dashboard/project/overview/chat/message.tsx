@@ -22,6 +22,7 @@ import equal from "fast-deep-equal";
 import { AnimatePresence, motion } from "framer-motion";
 import { Pencil, SparklesIcon } from "lucide-react";
 import { memo, useState } from "react";
+import { PersonaToolComponent } from "../persona/persona-tool-component";
 import { ProjectToolComponent } from "./tool/project-tool-component";
 
 const PurePreviewMessage = ({
@@ -155,6 +156,7 @@ const PurePreviewMessage = ({
 								if (state === "call") {
 									const { args } = toolInvocation;
 									console.log({ args });
+									console.log({ toolName });
 
 									return (
 										<div
@@ -169,8 +171,9 @@ const PurePreviewMessage = ({
 											{toolName === "updateProjectTool" ? (
 												<ProjectToolComponent />
 											) : toolName === "mutatePersonaTool" ? (
-												// <PersonaToolComponent />
-												<div>PersonaToolComponent</div>
+												<PersonaToolComponent />
+											) : toolName === "web_search_preview" ? (
+												<div>WebSearchToolComponent</div>
 											) : null}
 										</div>
 									);
@@ -178,7 +181,7 @@ const PurePreviewMessage = ({
 
 								if (state === "result") {
 									const { result } = toolInvocation;
-
+									console.log({ result });
 									return (
 										<div key={toolCallId}>
 											{toolName === "updateProjectTool" ? (
@@ -187,7 +190,15 @@ const PurePreviewMessage = ({
 													description={result.description}
 												/>
 											) : toolName === "mutatePersonaTool" ? (
-												<div>PersonaToolComponent</div>
+												<PersonaToolComponent
+													name={result.name}
+													occupation={result.occupation}
+												/>
+											) : toolName === "web_search_preview" ? (
+												<>
+													<pre>{result.text}</pre>
+													<pre>{result.sources}</pre>
+												</>
 											) : null}
 										</div>
 									);

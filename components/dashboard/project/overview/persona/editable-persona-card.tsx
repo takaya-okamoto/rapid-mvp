@@ -2,6 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { Persona } from "@/db/schema/persona";
@@ -12,21 +21,26 @@ import {
 	MapPinIcon,
 	PencilIcon,
 	TargetIcon,
+	Trash2Icon,
 	UserIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type EditablePersonaCardProps = {
 	persona: Persona;
 	handleUpdatePersona: (persona: Persona) => Promise<void>;
+	handleDeletePersona: (personaId: string) => Promise<void>;
 };
 
 export function EditablePersonaCard({
 	persona,
 	handleUpdatePersona,
+	handleDeletePersona,
 }: EditablePersonaCardProps) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 	const [editedPersona, setEditedPersona] = useState<Persona>(persona);
 
 	const handleInputChange = (field: keyof Persona, value: unknown) => {
@@ -54,6 +68,20 @@ export function EditablePersonaCard({
 	const handleCancel = () => {
 		setIsEditing(false);
 		setEditedPersona(persona);
+	};
+
+	const handleDelete = async () => {
+		setIsLoading(true);
+		try {
+			await handleDeletePersona(persona.id.toString());
+			setIsDeleteDialogOpen(false);
+			toast.success("Persona deleted successfully");
+		} catch (error) {
+			console.error("Failed to delete persona:", error);
+			toast.error("Failed to delete persona");
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	if (isEditing) {
@@ -291,121 +319,163 @@ export function EditablePersonaCard({
 	}
 
 	return (
-		<Card className="overflow-hidden transition-all border-main/10 bg-gradient-to-r from-main/[0.03] to-background group relative">
-			<div className="p-4">
-				<div className="absolute right-3 top-3 opacity-0 group-hover:opacity-100 transition-opacity">
-					<Button
-						variant="ghost"
-						size="icon"
-						className="h-7 w-7 rounded-full hover:bg-main/10"
-						onClick={() => setIsEditing(true)}
-					>
-						<PencilIcon className="h-3.5 w-3.5 text-main" />
-					</Button>
-				</div>
+		<>
+			<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+				<DialogContent className="sm:max-w-md">
+					<DialogHeader>
+						<DialogTitle>Delete Persona</DialogTitle>
+						<DialogDescription>
+							Are you sure you want to delete "{persona.name || "Unnamed"}"?
+							This action cannot be undone.
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter className="mt-4">
+						<Button
+							type="button"
+							variant="outline"
+							onClick={() => setIsDeleteDialogOpen(false)}
+							disabled={isLoading}
+						>
+							Cancel
+						</Button>
+						<Button
+							type="button"
+							variant="default"
+							onClick={handleDelete}
+							disabled={isLoading}
+						>
+							Delete
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 
-				{/* Basic Info Section */}
-				<div className="flex items-start justify-between mb-3">
-					<div className="flex items-start space-x-3">
-						<div className="rounded-full bg-main/10 p-2 shadow-sm">
-							<UserIcon className="h-6 w-6 text-main" />
-						</div>
-						<div className="flex-1">
-							<h3 className="text-lg font-bold text-slate-900">
-								{persona.name || "Unnamed"}
-							</h3>
-							<div className="text-xs text-muted-foreground">
-								{persona.age && `${persona.age} years old`}
-								{persona.male !== undefined && persona.age && " • "}
-								{persona.male !== undefined &&
-									(persona.male === true
-										? "Male"
-										: persona.male === false
-											? "Female"
-											: "Other")}
-								{persona.occupation && (
-									<span className="ml-1 font-medium text-slate-700">
-										• {persona.occupation}
-									</span>
-								)}
+			<Card className="overflow-hidden transition-all border-main/10 bg-gradient-to-r from-main/[0.03] to-background group relative">
+				<div className="p-4">
+					<div className="absolute right-3 top-3 opacity-0 group-hover:opacity-100 transition-opacity flex">
+						<Button
+							variant="ghost"
+							size="icon"
+							className="h-7 w-7 rounded-full hover:bg-main/10"
+							onClick={() => setIsEditing(true)}
+						>
+							<PencilIcon className="h-3.5 w-3.5 text-main" />
+						</Button>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="h-7 w-7 rounded-full hover:bg-red-100"
+							onClick={() => setIsDeleteDialogOpen(true)}
+						>
+							<Trash2Icon className="h-3.5 w-3.5 text-red-500" />
+						</Button>
+					</div>
+
+					{/* Basic Info Section */}
+					<div className="flex items-start justify-between mb-3">
+						<div className="flex items-start space-x-3">
+							<div className="rounded-full bg-main/10 p-2 shadow-sm">
+								<UserIcon className="h-6 w-6 text-main" />
+							</div>
+							<div className="flex-1">
+								<h3 className="text-lg font-bold text-slate-900">
+									{persona.name || "Unnamed"}
+								</h3>
+								<div className="text-xs text-muted-foreground">
+									{persona.age && `${persona.age} years old`}
+									{persona.male !== undefined && persona.age && " • "}
+									{persona.male !== undefined &&
+										(persona.male === true
+											? "Male"
+											: persona.male === false
+												? "Female"
+												: "Other")}
+									{persona.occupation && (
+										<span className="ml-1 font-medium text-slate-700">
+											• {persona.occupation}
+										</span>
+									)}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				{/* Demographics and Psychographics in a Grid */}
-				<div className="grid grid-cols-2 gap-2 mb-3">
-					<div className="bg-background rounded-lg p-2 border border-main/5">
-						<div className="flex items-center gap-2">
-							<div className="flex items-center justify-center rounded-full bg-main/10 p-1.5 w-6 h-6">
-								<MapPinIcon className="h-3 w-3 text-main-dark" />
+					{/* Demographics and Psychographics in a Grid */}
+					<div className="grid grid-cols-2 gap-2 mb-3">
+						<div className="bg-background rounded-lg p-2 border border-main/5">
+							<div className="flex items-center gap-2">
+								<div className="flex items-center justify-center rounded-full bg-main/10 p-1.5 w-6 h-6">
+									<MapPinIcon className="h-3 w-3 text-main-dark" />
+								</div>
+								<div className="text-xs">{persona.location}</div>
 							</div>
-							<div className="text-xs">{persona.location}</div>
 						</div>
+
+						{persona.income && (
+							<div className="bg-background rounded-lg p-2 border border-main/5">
+								<div className="flex items-center gap-2">
+									<div className="flex items-center justify-center rounded-full bg-main/10 p-1.5 w-6 h-6">
+										<DollarSign className="h-3 w-3 text-main-dark" />
+									</div>
+									<div className="text-xs">
+										${persona.income.toLocaleString()}
+									</div>
+								</div>
+							</div>
+						)}
+
+						{persona.values && (
+							<div className="bg-background rounded-lg p-2 border border-main/5">
+								<div className="flex items-center gap-2">
+									<div className="flex items-center justify-center rounded-full bg-main/10 p-1.5 w-6 h-6">
+										<HeartIcon className="h-3 w-3 text-main-dark" />
+									</div>
+									<div>
+										<div className="text-xs font-medium text-slate-700">
+											Values
+										</div>
+										<div className="text-xs line-clamp-2">{persona.values}</div>
+									</div>
+								</div>
+							</div>
+						)}
+
+						{persona.goals && (
+							<div className="bg-background rounded-lg p-2 border border-main/5">
+								<div className="flex items-center gap-2">
+									<div className="flex items-center justify-center rounded-full bg-main/10 p-1.5 w-6 h-6">
+										<TargetIcon className="h-3 w-3 text-main-dark" />
+									</div>
+									<div>
+										<div className="text-xs font-medium text-slate-700">
+											Goals
+										</div>
+										<div className="text-xs line-clamp-2">{persona.goals}</div>
+									</div>
+								</div>
+							</div>
+						)}
 					</div>
 
-					{persona.income && (
+					{persona.painPoints && (
 						<div className="bg-background rounded-lg p-2 border border-main/5">
 							<div className="flex items-center gap-2">
 								<div className="flex items-center justify-center rounded-full bg-main/10 p-1.5 w-6 h-6">
-									<DollarSign className="h-3 w-3 text-main-dark" />
-								</div>
-								<div className="text-xs">
-									${persona.income.toLocaleString()}
-								</div>
-							</div>
-						</div>
-					)}
-
-					{persona.values && (
-						<div className="bg-background rounded-lg p-2 border border-main/5">
-							<div className="flex items-center gap-2">
-								<div className="flex items-center justify-center rounded-full bg-main/10 p-1.5 w-6 h-6">
-									<HeartIcon className="h-3 w-3 text-main-dark" />
+									<AlertTriangleIcon className="h-3 w-3 text-main-dark" />
 								</div>
 								<div>
 									<div className="text-xs font-medium text-slate-700">
-										Values
+										Pain Points
 									</div>
-									<div className="text-xs line-clamp-2">{persona.values}</div>
-								</div>
-							</div>
-						</div>
-					)}
-
-					{persona.goals && (
-						<div className="bg-background rounded-lg p-2 border border-main/5">
-							<div className="flex items-center gap-2">
-								<div className="flex items-center justify-center rounded-full bg-main/10 p-1.5 w-6 h-6">
-									<TargetIcon className="h-3 w-3 text-main-dark" />
-								</div>
-								<div>
-									<div className="text-xs font-medium text-slate-700">
-										Goals
+									<div className="text-xs line-clamp-2">
+										{persona.painPoints}
 									</div>
-									<div className="text-xs line-clamp-2">{persona.goals}</div>
 								</div>
 							</div>
 						</div>
 					)}
 				</div>
-
-				{persona.painPoints && (
-					<div className="bg-background rounded-lg p-2 border border-main/5">
-						<div className="flex items-center gap-2">
-							<div className="flex items-center justify-center rounded-full bg-main/10 p-1.5 w-6 h-6">
-								<AlertTriangleIcon className="h-3 w-3 text-main-dark" />
-							</div>
-							<div>
-								<div className="text-xs font-medium text-slate-700">
-									Pain Points
-								</div>
-								<div className="text-xs line-clamp-2">{persona.painPoints}</div>
-							</div>
-						</div>
-					</div>
-				)}
-			</div>
-		</Card>
+			</Card>
+		</>
 	);
 }

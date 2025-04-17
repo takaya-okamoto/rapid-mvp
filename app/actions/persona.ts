@@ -60,9 +60,7 @@ export async function createPersona(params: CreatePersonaParams) {
 	};
 }
 
-export async function updatePersona(
-	params: Persona & { projectId: number; workspaceId: number },
-) {
+export async function updatePersona(params: Persona & { workspaceId: number }) {
 	const {
 		id,
 		projectId,

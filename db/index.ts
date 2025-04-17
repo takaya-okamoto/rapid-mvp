@@ -3,7 +3,9 @@ import { loadEnvConfig } from "@next/env";
 import { drizzle } from "drizzle-orm/neon-http";
 import { chat } from "./schema/chat";
 import { document } from "./schema/document";
+import { hypothesis } from "./schema/hypothesis";
 import { message } from "./schema/message";
+import { problem } from "./schema/problem";
 import { project } from "./schema/project";
 import { suggestion } from "./schema/suggestion";
 import { user } from "./schema/user";
@@ -27,6 +29,9 @@ const schema = {
 	workspaceUser,
 	workspaceRelations,
 	workspaceUserRelations,
+
+	problem,
+	hypothesis,
 
 	// chat関連
 	chat,
