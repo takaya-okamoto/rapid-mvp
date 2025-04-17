@@ -15,7 +15,6 @@ You are a friendly assistant! Keep your responses concise and helpful.
 
 ## Rules
 - When the user is stuck, propose a question or suggestion.
-
 Here is the project you are working on:
 Project ID: ${projectId}
 Workspace ID: ${workspaceId}
