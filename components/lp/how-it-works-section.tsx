@@ -15,65 +15,50 @@ export function HowItWorksSection() {
 	const steps = [
 		{
 			id: "step1",
-			title: "Input Your Idea",
+			title: "Persona Creation",
 			description:
-				"Describe your service concept, target customers, and the problem you're solving.",
-			image: "/placeholder.svg?height=400&width=400",
+				"Our AI creates detailed user personas based on your target market, helping you understand who your customers are and what they need.",
+			image: "/persona.png",
 			stats: [
-				{ value: 5, suffix: " min", label: "Average Time" },
-				{ value: 92, suffix: "%", label: "Completion Rate" },
+				{ value: 5, label: "Personas Generated", suffix: "+" },
+				{ value: 98, suffix: "%", label: "Customer Relevance" },
 			],
 			features: [
-				"Simple registration process",
-				"Guided idea input form",
-				"Store multiple business ideas",
+				"Detailed demographic profiles",
+				"Psychographic analysis of user needs",
+				"Pain points and goal identification",
 			],
 		},
 		{
 			id: "step2",
-			title: "AI Analysis",
+			title: "Problem Identification",
 			description:
-				"Our AI analyzes market needs, existing solutions, and competitive landscape.",
-			image: "/placeholder.svg?height=400&width=400",
+				"Our AI identifies and analyzes specific problems your target users are facing, creating a prioritized list of issues to solve.",
+			image: "/problem.png",
 			stats: [
-				{ value: 500, suffix: "+", label: "Data Sources" },
-				{ value: 98, suffix: "%", label: "Accuracy Rate" },
+				{ value: 8, label: "Avg. Problems Found", suffix: "+" },
+				{ value: 95, suffix: "%", label: "Relevance Rate" },
 			],
 			features: [
-				"Comprehensive market research",
-				"Competitive analysis",
-				"Customer pain point identification",
+				"AI-powered problem discovery",
+				"Prioritization of user pain points",
+				"Detailed problem analysis with evidence",
 			],
 		},
 		{
 			id: "step3",
-			title: "Validation Plan",
+			title: "MVP Generation",
 			description:
-				"Get a customized MVP testing plan with concrete steps to validate your idea.",
-			image: "/placeholder.svg?height=400&width=400",
+				"Generate a complete Minimum Viable Product concept to test your solution against the identified problems, including features and visuals.",
+			image: "/top.png",
 			stats: [
-				{ value: 3, label: "Validation Methods" },
-				{ value: 14, suffix: " days", label: "Avg. Validation Time" },
+				{ value: 10, suffix: " min", label: "Generation Time" },
+				{ value: 90, suffix: "%", label: "Validation Success" },
 			],
 			features: [
-				"Personalized action steps",
-				"Resource recommendations",
-				"Timeline and milestones",
-			],
-		},
-		{
-			id: "step4",
-			title: "Feedback Collection",
-			description: "Gather and analyze customer feedback to refine your idea.",
-			image: "/placeholder.svg?height=400&width=400",
-			stats: [
-				{ value: 25, suffix: "+", label: "Feedback Templates" },
-				{ value: 87, suffix: "%", label: "Response Rate" },
-			],
-			features: [
-				"Automated feedback collection",
-				"AI-powered sentiment analysis",
-				"Actionable insights",
+				"Automated MVP design with essential features",
+				"Ready-to-test product concepts",
+				"Instagram-ready marketing visualizations",
 			],
 		},
 	];
@@ -107,7 +92,7 @@ export function HowItWorksSection() {
 					onValueChange={setActiveTab}
 					className="w-full"
 				>
-					<TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-8 bg-gray-100">
+					<TabsList className="grid w-full grid-cols-3 mb-8 bg-gray-100">
 						{steps.map((step) => (
 							<TabsTrigger
 								key={step.id}
