@@ -14,6 +14,8 @@ export const hypothesis = pgTable("hypothesis", {
 		.notNull()
 		.references(() => problem.id),
 	hypothesis: text("hypothesis").notNull(),
+	name: text("name").notNull(),
+	description: text("description").notNull(),
 
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),

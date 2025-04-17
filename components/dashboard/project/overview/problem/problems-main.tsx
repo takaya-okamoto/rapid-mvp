@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import type { problem } from "@/db/schema/problem";
 import { ClipboardListIcon, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { EditableProblemCard } from "./editable-problem-card";
 
 // Define Problem type based on the schema
@@ -21,7 +20,7 @@ export function ProblemsMain({
 	projectId,
 	workspaceId,
 }: ProblemsMainProps) {
-	const [isLoading, setIsLoading] = useState(false);
+	// isLoading state removed as it was unused
 
 	// Handler for updating problems
 	const handleUpdateProblem = async (
@@ -37,14 +36,11 @@ export function ProblemsMain({
 
 	// Handler for deleting problems
 	const handleDeleteProblem = async (problemId: string): Promise<void> => {
-		setIsLoading(true);
 		try {
 			// Implementation will be added later
 			console.log("Delete problem:", problemId);
 		} catch (error) {
 			console.error("ProblemsMain: Error deleting problem", error);
-		} finally {
-			setIsLoading(false);
 		}
 	};
 

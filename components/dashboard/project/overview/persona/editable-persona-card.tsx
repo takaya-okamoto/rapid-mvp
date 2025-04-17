@@ -9,7 +9,6 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -325,8 +324,8 @@ export function EditablePersonaCard({
 					<DialogHeader>
 						<DialogTitle>Delete Persona</DialogTitle>
 						<DialogDescription>
-							Are you sure you want to delete "{persona.name || "Unnamed"}"?
-							This action cannot be undone.
+							Are you sure you want to delete &quot;{persona.name || "Unnamed"}
+							&quot;? This action cannot be undone.
 						</DialogDescription>
 					</DialogHeader>
 					<DialogFooter className="mt-4">

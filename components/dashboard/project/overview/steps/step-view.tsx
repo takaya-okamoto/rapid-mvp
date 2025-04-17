@@ -14,14 +14,16 @@ import { cn } from "@/lib/utils";
  * 1. Details
  * 2. Personas
  * 3. Problem
- * 4. Hypothesis
+//  * 4. Hypothesis
+ * 4. MVPs 
  */
 
 enum Step {
 	Details = "Details",
 	Personas = "Personas",
 	Problem = "Problem",
-	Hypothesis = "Hypothesis",
+	// Hypothesis = "Hypothesis",
+	MVPs = "MVPs",
 }
 
 // Step descriptions in English
@@ -29,7 +31,8 @@ const stepDescriptions: Record<Step, string> = {
 	[Step.Details]: "Basic project information",
 	[Step.Personas]: "Target user profiles",
 	[Step.Problem]: "Problem definition",
-	[Step.Hypothesis]: "Validation hypotheses",
+	// [Step.Hypothesis]: "Validation hypotheses",
+	[Step.MVPs]: "Minimum viable products",
 };
 
 function StepItem({

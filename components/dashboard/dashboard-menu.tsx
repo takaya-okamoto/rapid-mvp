@@ -29,14 +29,14 @@ export function DashboardMenu() {
 			label: "Overview",
 			href: `/dashboard/${workspaceId}/${projectId}/overview`,
 		},
-		{
-			label: "MVPs",
-			href: `/dashboard/${workspaceId}/${projectId}/mvps`,
-		},
-		{
-			label: "Feedbacks",
-			href: `/dashboard/${workspaceId}/${projectId}/feedbacks`,
-		},
+		// {
+		// 	label: "MVPs",
+		// 	href: `/dashboard/${workspaceId}/${projectId}/mvps`,
+		// },
+		// {
+		// 	label: "Feedbacks",
+		// 	href: `/dashboard/${workspaceId}/${projectId}/feedbacks`,
+		// },
 	];
 	const menuItems = projectId ? PROJECT_MENU_ITEMS : ROOT_MENU_ITEMS;
 

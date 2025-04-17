@@ -16,7 +16,6 @@ export async function createProblem({
 	projectId,
 	workspaceId,
 	title,
-	description,
 }: CreateProblemParams) {
 	try {
 		await db.insert(problem).values({
@@ -47,7 +46,6 @@ export async function updateProblem({
 	projectId,
 	workspaceId,
 	title,
-	description,
 }: UpdateProblemParams) {
 	try {
 		const updateData: Partial<typeof problem.$inferInsert> = {};

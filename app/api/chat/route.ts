@@ -26,7 +26,6 @@ import {
 	getMostRecentUserMessage,
 	getTrailingMessageId,
 } from "@/lib/utils";
-import { openai } from "@ai-sdk/openai";
 import { currentUser } from "@clerk/nextjs/server";
 
 import {

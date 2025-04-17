@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import type { Persona } from "@/db/schema/persona";
 import { Sparkles, UserIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { EditablePersonaCard } from "./editable-persona-card";
 
 type PersonasMainProps = {
@@ -19,7 +18,7 @@ export function PersonasMain({
 	projectId,
 	workspaceId,
 }: PersonasMainProps) {
-	const [isLoading, setIsLoading] = useState(false);
+	// isLoading state was unused - removed
 
 	// Handler for updating personas
 	const handleUpdatePersona = async (
@@ -45,13 +44,10 @@ export function PersonasMain({
 
 	// Handler for deleting personas
 	const handleDeletePersona = async (personaId: string): Promise<void> => {
-		setIsLoading(true);
 		try {
 			await deletePersona(personaId, Number(projectId), Number(workspaceId));
 		} catch (error) {
 			console.error("PersonasMain: Error deleting persona", error);
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
