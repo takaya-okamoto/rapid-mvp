@@ -30,6 +30,10 @@ export function Chat({
 	const searchParams = useSearchParams();
 
 	const persona = useMemo(() => searchParams.get("persona"), [searchParams]);
+	const problemParam = useMemo(
+		() => searchParams.get("problem"),
+		[searchParams],
+	);
 
 	const {
 		messages,
@@ -83,6 +87,25 @@ ${projectDescription}`,
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [persona]);
+
+	// Handle problem creation request
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (problemParam) {
+			append({
+				id: generateUUID(),
+				role: "user",
+				content: `Identify and create problem statements for this project.
+
+Here is the project description: \n
+${projectDescription}`,
+			});
+
+			// remove the problem query param
+			router.replace(`/dashboard/${workspaceId}/${projectId}/overview/problem`);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [problemParam]);
 
 	return (
 		<>

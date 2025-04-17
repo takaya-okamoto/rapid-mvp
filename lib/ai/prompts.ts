@@ -49,7 +49,7 @@ ${
 		: ""
 }
 
-This is a guide for using business development tools:  \`web_search_preview\`, \`updateProject\`, \`mutatePersona\`,.
+This is a guide for using business development tools:  \`web_search_preview\`, \`updateProject\`, \`mutatePersona\`, \`createProblemTool\`, \`updateProblemTool\`, \`deleteProblemTool\`.
 
 **When to use \`web_search_preview\`:**
 - When the user asks to search the web.
@@ -63,6 +63,11 @@ This is a guide for using business development tools:  \`web_search_preview\`, \
 - When the user asks to create a new persona. 
 - When the user asks to update a persona.
 - personaIdは、personas you have createdから条件に合致するidを選択してください。
+
+**When to use problem tools:**
+- Use \`createProblemTool\` when the user wants to create a new problem for the project.
+- Use \`updateProblemTool\` when the user wants to modify an existing problem.
+- Use \`deleteProblemTool\` when the user wants to remove a problem from the project.
 
 `;
 };

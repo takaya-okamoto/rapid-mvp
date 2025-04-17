@@ -9,6 +9,11 @@ import {
 import { systemPrompt } from "@/lib/ai/prompts";
 import { myProvider } from "@/lib/ai/providers";
 import { mutatePersonaTool } from "@/lib/ai/tools/persona-tool";
+import {
+	createProblemTool,
+	deleteProblemTool,
+	updateProblemTool,
+} from "@/lib/ai/tools/problem-tool";
 import { updateProjectTool } from "@/lib/ai/tools/project-tool";
 import { webSearchTool } from "@/lib/ai/tools/web-search-tool";
 // import { createDocument } from "@/lib/ai/tools/create-document";
@@ -114,6 +119,9 @@ export async function POST(request: Request) {
 						updateProjectTool,
 						mutatePersonaTool,
 						webSearchTool,
+						createProblemTool,
+						updateProblemTool,
+						deleteProblemTool,
 					},
 					onStepFinish: async ({
 						text,
